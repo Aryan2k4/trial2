@@ -1,0 +1,8 @@
+zone_id,name,zone_type,capacity
+ZN-001,Open Office East,open,60
+ZN-002,Open Office West,open,60
+ZN-003,Conference Room A,meeting,12
+ZN-004,Conference Room B,meeting,8
+ZN-005,Server Room,restricted,4
+ZN-006,Cafeteria,common,80
+ZN-007,Executive Wing,restricted,10

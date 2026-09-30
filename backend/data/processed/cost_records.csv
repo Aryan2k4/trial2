@@ -1,0 +1,281 @@
+record_id,vendor_id,vendor_name,category,date,amount_inr,description,po_number
+REC-00001,VEN-005,GreenScape Landscaping,Landscaping,2026-02-04,412.71,Landscaping — GreenScape Landscaping,PO-00001
+REC-00002,VEN-006,NimbusTech Solutions,IT & Software,2026-02-05,3641.74,IT & Software — NimbusTech Solutions,PO-00002
+REC-00003,VEN-003,CleanSweep Co,Cleaning Services,2026-02-06,1535.63,Cleaning Services — CleanSweep Co,PO-00003
+REC-00004,VEN-005,GreenScape Landscaping,Landscaping,2026-02-07,572.0,Landscaping — GreenScape Landscaping,PO-00004
+REC-00005,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-08,3770.11,Repairs & Maintenance — Apex Facility Services,PO-00005
+REC-00006,VEN-003,CleanSweep Co,Cleaning Services,2026-02-08,1527.9,Cleaning Services — CleanSweep Co,PO-00006
+REC-00007,VEN-004,Sentinel Security Group,Security Services,2026-02-08,1005.03,Security Services — Sentinel Security Group,PO-00007
+REC-00008,VEN-002,BrightPower Utilities,Utilities,2026-02-11,3445.3,Utilities — BrightPower Utilities,PO-00008
+REC-00009,VEN-006,NimbusTech Solutions,IT & Software,2026-02-12,3049.27,IT & Software — NimbusTech Solutions,PO-00009
+REC-00010,VEN-005,GreenScape Landscaping,Landscaping,2026-02-13,1564.1,Landscaping — GreenScape Landscaping,PO-00010
+REC-00011,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-14,8428.69,Repairs & Maintenance — Apex Facility Services,PO-00011
+REC-00012,VEN-003,CleanSweep Co,Cleaning Services,2026-02-14,1818.11,Cleaning Services — CleanSweep Co,PO-00012
+REC-00013,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-15,1237.94,Repairs & Maintenance — Apex Facility Services,PO-00013
+REC-00014,VEN-004,Sentinel Security Group,Security Services,2026-02-15,4386.74,Security Services — Sentinel Security Group,PO-00014
+REC-00015,VEN-003,CleanSweep Co,Cleaning Services,2026-02-15,2065.31,Cleaning Services — CleanSweep Co,PO-00015
+REC-00016,VEN-002,BrightPower Utilities,Utilities,2026-02-16,2129.6,Utilities — BrightPower Utilities,PO-00016
+REC-00017,VEN-002,BrightPower Utilities,Utilities,2026-02-17,3564.88,Utilities — BrightPower Utilities,PO-00017
+REC-00018,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-02-17,5017.95,Repairs & Maintenance — Reliable Repairs Ltd,PO-00018
+REC-00019,VEN-002,BrightPower Utilities,Utilities,2026-02-17,3311.88,Utilities — BrightPower Utilities,PO-00019
+REC-00020,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-02-18,11203.24,Repairs & Maintenance — Reliable Repairs Ltd,PO-00020
+REC-00021,VEN-002,BrightPower Utilities,Utilities,2026-02-19,3495.13,Utilities — BrightPower Utilities,PO-00021
+REC-00022,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-02-19,4833.43,Repairs & Maintenance — Reliable Repairs Ltd,PO-00022
+REC-00023,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-20,2703.3,Repairs & Maintenance — Apex Facility Services,PO-00023
+REC-00024,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-21,648.64,Repairs & Maintenance — Apex Facility Services,PO-00024
+REC-00025,VEN-002,BrightPower Utilities,Utilities,2026-02-22,2335.62,Utilities — BrightPower Utilities,PO-00025
+REC-00026,VEN-006,NimbusTech Solutions,IT & Software,2026-02-22,840.63,IT & Software — NimbusTech Solutions,PO-00026
+REC-00027,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-02-23,11883.15,Repairs & Maintenance — Apex Facility Services,PO-00027
+REC-00028,VEN-003,CleanSweep Co,Cleaning Services,2026-02-25,2158.49,Cleaning Services — CleanSweep Co,PO-00028
+REC-00029,VEN-003,CleanSweep Co,Cleaning Services,2026-02-25,1546.94,Cleaning Services — CleanSweep Co,PO-00029
+REC-00030,VEN-003,CleanSweep Co,Cleaning Services,2026-02-25,1709.46,Cleaning Services — CleanSweep Co,PO-00030
+REC-00031,VEN-006,NimbusTech Solutions,IT & Software,2026-02-26,542.56,IT & Software — NimbusTech Solutions,PO-00031
+REC-00032,VEN-006,NimbusTech Solutions,IT & Software,2026-02-27,1604.18,IT & Software — NimbusTech Solutions,PO-00032
+REC-00033,VEN-004,Sentinel Security Group,Security Services,2026-02-28,1711.19,Security Services — Sentinel Security Group,PO-00033
+REC-00034,VEN-006,NimbusTech Solutions,IT & Software,2026-03-02,3545.96,IT & Software — NimbusTech Solutions,PO-00034
+REC-00035,VEN-005,GreenScape Landscaping,Landscaping,2026-03-03,705.52,Landscaping — GreenScape Landscaping,PO-00035
+REC-00036,VEN-003,CleanSweep Co,Cleaning Services,2026-03-03,995.36,Cleaning Services — CleanSweep Co,PO-00036
+REC-00037,VEN-003,CleanSweep Co,Cleaning Services,2026-03-03,1007.26,Cleaning Services — CleanSweep Co,PO-00037
+REC-00038,VEN-005,GreenScape Landscaping,Landscaping,2026-03-06,565.45,Landscaping — GreenScape Landscaping,PO-00038
+REC-00039,VEN-006,NimbusTech Solutions,IT & Software,2026-03-07,2410.59,IT & Software — NimbusTech Solutions,PO-00039
+REC-00040,VEN-002,BrightPower Utilities,Utilities,2026-03-10,4442.84,Utilities — BrightPower Utilities,PO-00040
+REC-00041,VEN-002,BrightPower Utilities,Utilities,2026-03-10,2861.56,Utilities — BrightPower Utilities,PO-00041
+REC-00042,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-11,1450.07,Repairs & Maintenance — Apex Facility Services,PO-00042
+REC-00043,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-03-13,1714.33,Repairs & Maintenance — Reliable Repairs Ltd,PO-00043
+REC-00044,VEN-006,NimbusTech Solutions,IT & Software,2026-03-15,3721.4,IT & Software — NimbusTech Solutions,PO-00044
+REC-00045,VEN-005,GreenScape Landscaping,Landscaping,2026-03-15,649.84,Landscaping — GreenScape Landscaping,PO-00045
+REC-00046,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-15,1529.61,Repairs & Maintenance — Apex Facility Services,PO-00046
+REC-00047,VEN-005,GreenScape Landscaping,Landscaping,2026-03-16,942.02,Landscaping — GreenScape Landscaping,PO-00047
+REC-00048,VEN-002,BrightPower Utilities,Utilities,2026-03-16,5061.94,Utilities — BrightPower Utilities,PO-00048
+REC-00049,VEN-004,Sentinel Security Group,Security Services,2026-03-17,909.3,Security Services — Sentinel Security Group,PO-00049
+REC-00050,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-03-17,5667.48,Repairs & Maintenance — Reliable Repairs Ltd,PO-00050
+REC-00051,VEN-006,NimbusTech Solutions,IT & Software,2026-03-21,2940.75,IT & Software — NimbusTech Solutions,PO-00051
+REC-00052,VEN-006,NimbusTech Solutions,IT & Software,2026-03-21,2533.25,IT & Software — NimbusTech Solutions,PO-00052
+REC-00053,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-21,1626.27,Repairs & Maintenance — Apex Facility Services,PO-00053
+REC-00054,VEN-006,NimbusTech Solutions,IT & Software,2026-03-22,3721.58,IT & Software — NimbusTech Solutions,PO-00054
+REC-00055,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-24,1201.76,Repairs & Maintenance — Apex Facility Services,PO-00055
+REC-00056,VEN-003,CleanSweep Co,Cleaning Services,2026-03-26,1390.38,Cleaning Services — CleanSweep Co,PO-00056
+REC-00057,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-03-26,2091.88,Repairs & Maintenance — Reliable Repairs Ltd,PO-00057
+REC-00058,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-28,4933.73,Repairs & Maintenance — Apex Facility Services,PO-00058
+REC-00059,VEN-004,Sentinel Security Group,Security Services,2026-03-28,2323.76,Security Services — Sentinel Security Group,PO-00059
+REC-00060,VEN-003,CleanSweep Co,Cleaning Services,2026-03-28,2508.73,Cleaning Services — CleanSweep Co,PO-00060
+REC-00061,VEN-002,BrightPower Utilities,Utilities,2026-03-29,6941.45,Utilities — BrightPower Utilities,PO-00061
+REC-00062,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-03-30,2395.84,Repairs & Maintenance — Reliable Repairs Ltd,PO-00062
+REC-00063,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-03-30,2361.14,Repairs & Maintenance — Reliable Repairs Ltd,PO-00063
+REC-00064,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-30,1463.79,Repairs & Maintenance — Apex Facility Services,PO-00064
+REC-00065,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-30,3431.92,Repairs & Maintenance — Apex Facility Services,PO-00065
+REC-00066,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-03-31,2299.72,Repairs & Maintenance — Apex Facility Services,PO-00066
+REC-00067,VEN-004,Sentinel Security Group,Security Services,2026-04-02,628.47,Security Services — Sentinel Security Group,PO-00067
+REC-00068,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-02,3462.42,Repairs & Maintenance — Apex Facility Services,PO-00068
+REC-00069,VEN-004,Sentinel Security Group,Security Services,2026-04-02,1926.81,Security Services — Sentinel Security Group,PO-00069
+REC-00070,VEN-003,CleanSweep Co,Cleaning Services,2026-04-03,945.75,Cleaning Services — CleanSweep Co,PO-00070
+REC-00071,VEN-003,CleanSweep Co,Cleaning Services,2026-04-03,659.98,Cleaning Services — CleanSweep Co,PO-00071
+REC-00072,VEN-003,CleanSweep Co,Cleaning Services,2026-04-05,1371.58,Cleaning Services — CleanSweep Co,PO-00072
+REC-00073,VEN-002,BrightPower Utilities,Utilities,2026-04-05,4486.85,Utilities — BrightPower Utilities,PO-00073
+REC-00074,VEN-004,Sentinel Security Group,Security Services,2026-04-05,928.12,Security Services — Sentinel Security Group,PO-00074
+REC-00075,VEN-004,Sentinel Security Group,Security Services,2026-04-06,1228.98,Security Services — Sentinel Security Group,PO-00075
+REC-00076,VEN-003,CleanSweep Co,Cleaning Services,2026-04-07,1284.05,Cleaning Services — CleanSweep Co,PO-00076
+REC-00077,VEN-003,CleanSweep Co,Cleaning Services,2026-04-07,1121.73,Cleaning Services — CleanSweep Co,PO-00077
+REC-00078,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-08,1903.87,Repairs & Maintenance — Reliable Repairs Ltd,PO-00078
+REC-00079,VEN-006,NimbusTech Solutions,IT & Software,2026-04-08,2098.3,IT & Software — NimbusTech Solutions,PO-00079
+REC-00080,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-10,4210.57,Repairs & Maintenance — Reliable Repairs Ltd,PO-00080
+REC-00081,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-12,2670.59,Repairs & Maintenance — Reliable Repairs Ltd,PO-00081
+REC-00082,VEN-002,BrightPower Utilities,Utilities,2026-04-13,6998.13,Utilities — BrightPower Utilities,PO-00082
+REC-00083,VEN-004,Sentinel Security Group,Security Services,2026-04-14,1581.31,Security Services — Sentinel Security Group,PO-00083
+REC-00084,VEN-005,GreenScape Landscaping,Landscaping,2026-04-14,1465.89,Landscaping — GreenScape Landscaping,PO-00084
+REC-00085,VEN-005,GreenScape Landscaping,Landscaping,2026-04-15,816.61,Landscaping — GreenScape Landscaping,PO-00085
+REC-00086,VEN-002,BrightPower Utilities,Utilities,2026-04-16,5510.8,Utilities — BrightPower Utilities,PO-00086
+REC-00087,VEN-002,BrightPower Utilities,Utilities,2026-04-16,4559.5,Utilities — BrightPower Utilities,PO-00087
+REC-00088,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-17,1779.46,Repairs & Maintenance — Apex Facility Services,PO-00088
+REC-00089,VEN-005,GreenScape Landscaping,Landscaping,2026-04-18,602.9,Landscaping — GreenScape Landscaping,PO-00089
+REC-00090,VEN-006,NimbusTech Solutions,IT & Software,2026-04-18,4613.09,IT & Software — NimbusTech Solutions,PO-00090
+REC-00091,VEN-005,GreenScape Landscaping,Landscaping,2026-04-18,289.17,Landscaping — GreenScape Landscaping,PO-00091
+REC-00092,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-18,1100.43,Repairs & Maintenance — Reliable Repairs Ltd,PO-00092
+REC-00093,VEN-005,GreenScape Landscaping,Landscaping,2026-04-18,825.47,Landscaping — GreenScape Landscaping,PO-00093
+REC-00094,VEN-006,NimbusTech Solutions,IT & Software,2026-04-19,3996.59,IT & Software — NimbusTech Solutions,PO-00094
+REC-00095,VEN-002,BrightPower Utilities,Utilities,2026-04-20,5918.13,Utilities — BrightPower Utilities,PO-00095
+REC-00096,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-21,1924.83,Repairs & Maintenance — Reliable Repairs Ltd,PO-00096
+REC-00097,VEN-003,CleanSweep Co,Cleaning Services,2026-04-22,1401.46,Cleaning Services — CleanSweep Co,PO-00097
+REC-00098,VEN-004,Sentinel Security Group,Security Services,2026-04-22,1972.93,Security Services — Sentinel Security Group,PO-00098
+REC-00099,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-23,1210.36,Repairs & Maintenance — Apex Facility Services,PO-00099
+REC-00100,VEN-003,CleanSweep Co,Cleaning Services,2026-04-23,853.97,Cleaning Services — CleanSweep Co,PO-00100
+REC-00101,VEN-006,NimbusTech Solutions,IT & Software,2026-04-24,2081.28,IT & Software — NimbusTech Solutions,PO-00101
+REC-00102,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-24,1129.67,Repairs & Maintenance — Apex Facility Services,PO-00102
+REC-00103,VEN-004,Sentinel Security Group,Security Services,2026-04-24,1196.76,Security Services — Sentinel Security Group,PO-00103
+REC-00104,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-27,1100.17,Repairs & Maintenance — Apex Facility Services,PO-00104
+REC-00105,VEN-005,GreenScape Landscaping,Landscaping,2026-04-28,819.68,Landscaping — GreenScape Landscaping,PO-00105
+REC-00106,VEN-005,GreenScape Landscaping,Landscaping,2026-04-29,712.32,Landscaping — GreenScape Landscaping,PO-00106
+REC-00107,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-04-29,7952.22,Repairs & Maintenance — Reliable Repairs Ltd,PO-00107
+REC-00108,VEN-006,NimbusTech Solutions,IT & Software,2026-04-30,1967.64,IT & Software — NimbusTech Solutions,PO-00108
+REC-00109,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-30,5742.84,Repairs & Maintenance — Apex Facility Services,PO-00109
+REC-00110,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-04-30,2528.23,Repairs & Maintenance — Apex Facility Services,PO-00110
+REC-00111,VEN-006,NimbusTech Solutions,IT & Software,2026-05-02,1246.65,IT & Software — NimbusTech Solutions,PO-00111
+REC-00112,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-05-02,1249.76,Repairs & Maintenance — Reliable Repairs Ltd,PO-00112
+REC-00113,VEN-003,CleanSweep Co,Cleaning Services,2026-05-05,1637.4,Cleaning Services — CleanSweep Co,PO-00113
+REC-00114,VEN-003,CleanSweep Co,Cleaning Services,2026-05-06,989.62,Cleaning Services — CleanSweep Co,PO-00114
+REC-00115,VEN-002,BrightPower Utilities,Utilities,2026-05-08,11712.84,Utilities — BrightPower Utilities,PO-00115
+REC-00116,VEN-002,BrightPower Utilities,Utilities,2026-05-10,4631.0,Utilities — BrightPower Utilities,PO-00116
+REC-00117,VEN-003,CleanSweep Co,Cleaning Services,2026-05-11,1106.53,Cleaning Services — CleanSweep Co,PO-00117
+REC-00118,VEN-006,NimbusTech Solutions,IT & Software,2026-05-12,1356.81,IT & Software — NimbusTech Solutions,PO-00118
+REC-00119,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-05-15,2352.37,Repairs & Maintenance — Apex Facility Services,PO-00119
+REC-00120,VEN-002,BrightPower Utilities,Utilities,2026-05-15,4310.51,Utilities — BrightPower Utilities,PO-00120
+REC-00121,VEN-006,NimbusTech Solutions,IT & Software,2026-05-16,2672.99,IT & Software — NimbusTech Solutions,PO-00121
+REC-00122,VEN-005,GreenScape Landscaping,Landscaping,2026-05-17,836.49,Landscaping — GreenScape Landscaping,PO-00122
+REC-00123,VEN-002,BrightPower Utilities,Utilities,2026-05-18,5246.15,Utilities — BrightPower Utilities,PO-00123
+REC-00124,VEN-006,NimbusTech Solutions,IT & Software,2026-05-18,4113.78,IT & Software — NimbusTech Solutions,PO-00124
+REC-00125,VEN-003,CleanSweep Co,Cleaning Services,2026-05-18,2558.4,Cleaning Services — CleanSweep Co,PO-00125
+REC-00126,VEN-002,BrightPower Utilities,Utilities,2026-05-20,3691.79,Utilities — BrightPower Utilities,PO-00126
+REC-00127,VEN-003,CleanSweep Co,Cleaning Services,2026-05-20,1254.17,Cleaning Services — CleanSweep Co,PO-00127
+REC-00128,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-05-21,414.53,Repairs & Maintenance — Apex Facility Services,PO-00128
+REC-00129,VEN-004,Sentinel Security Group,Security Services,2026-05-21,2528.45,Security Services — Sentinel Security Group,PO-00129
+REC-00130,VEN-004,Sentinel Security Group,Security Services,2026-05-22,1613.04,Security Services — Sentinel Security Group,PO-00130
+REC-00131,VEN-003,CleanSweep Co,Cleaning Services,2026-05-22,488.12,Cleaning Services — CleanSweep Co,PO-00131
+REC-00132,VEN-002,BrightPower Utilities,Utilities,2026-05-23,6929.36,Utilities — BrightPower Utilities,PO-00132
+REC-00133,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-05-24,1944.27,Repairs & Maintenance — Apex Facility Services,PO-00133
+REC-00134,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-05-24,4627.26,Repairs & Maintenance — Reliable Repairs Ltd,PO-00134
+REC-00135,VEN-002,BrightPower Utilities,Utilities,2026-05-24,3224.73,Utilities — BrightPower Utilities,PO-00135
+REC-00136,VEN-005,GreenScape Landscaping,Landscaping,2026-05-26,814.8,Landscaping — GreenScape Landscaping,PO-00136
+REC-00137,VEN-005,GreenScape Landscaping,Landscaping,2026-05-27,1262.48,Landscaping — GreenScape Landscaping,PO-00137
+REC-00138,VEN-006,NimbusTech Solutions,IT & Software,2026-05-28,4804.1,IT & Software — NimbusTech Solutions,PO-00138
+REC-00139,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-05-29,3704.6,Repairs & Maintenance — Reliable Repairs Ltd,PO-00139
+REC-00140,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-05-30,3070.86,Repairs & Maintenance — Apex Facility Services,PO-00140
+REC-00141,VEN-006,NimbusTech Solutions,IT & Software,2026-05-30,1897.29,IT & Software — NimbusTech Solutions,PO-00141
+REC-00142,VEN-002,BrightPower Utilities,Utilities,2026-05-30,4197.36,Utilities — BrightPower Utilities,PO-00142
+REC-00143,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-05-30,7050.53,Repairs & Maintenance — Reliable Repairs Ltd,PO-00143
+REC-00144,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-05-31,2007.2,Repairs & Maintenance — Reliable Repairs Ltd,PO-00144
+REC-00145,VEN-005,GreenScape Landscaping,Landscaping,2026-05-31,725.9,Landscaping — GreenScape Landscaping,PO-00145
+REC-00146,VEN-002,BrightPower Utilities,Utilities,2026-06-01,1980.75,Utilities — BrightPower Utilities,PO-00146
+REC-00147,VEN-004,Sentinel Security Group,Security Services,2026-06-03,2782.55,Security Services — Sentinel Security Group,PO-00147
+REC-00148,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-06-05,2684.74,Repairs & Maintenance — Apex Facility Services,PO-00148
+REC-00149,VEN-003,CleanSweep Co,Cleaning Services,2026-06-05,1031.17,Cleaning Services — CleanSweep Co,PO-00149
+REC-00150,VEN-002,BrightPower Utilities,Utilities,2026-06-06,3572.06,Utilities — BrightPower Utilities,PO-00150
+REC-00151,VEN-004,Sentinel Security Group,Security Services,2026-06-06,1309.81,Security Services — Sentinel Security Group,PO-00151
+REC-00152,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-07,3632.88,Repairs & Maintenance — Reliable Repairs Ltd,PO-00152
+REC-00153,VEN-005,GreenScape Landscaping,Landscaping,2026-06-09,355.95,Landscaping — GreenScape Landscaping,PO-00153
+REC-00154,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-09,3987.69,Repairs & Maintenance — Reliable Repairs Ltd,PO-00154
+REC-00155,VEN-002,BrightPower Utilities,Utilities,2026-06-10,10250.97,Utilities — BrightPower Utilities,PO-00155
+REC-00156,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-10,1906.66,Repairs & Maintenance — Reliable Repairs Ltd,PO-00156
+REC-00157,VEN-005,GreenScape Landscaping,Landscaping,2026-06-10,684.86,Landscaping — GreenScape Landscaping,PO-00157
+REC-00158,VEN-004,Sentinel Security Group,Security Services,2026-06-14,3252.17,Security Services — Sentinel Security Group,PO-00158
+REC-00159,VEN-002,BrightPower Utilities,Utilities,2026-06-14,10683.01,Utilities — BrightPower Utilities,PO-00159
+REC-00160,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-06-15,1121.33,Repairs & Maintenance — Apex Facility Services,PO-00160
+REC-00161,VEN-006,NimbusTech Solutions,IT & Software,2026-06-15,1752.38,IT & Software — NimbusTech Solutions,PO-00161
+REC-00162,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-06-16,3072.9,Repairs & Maintenance — Apex Facility Services,PO-00162
+REC-00163,VEN-005,GreenScape Landscaping,Landscaping,2026-06-16,564.86,Landscaping — GreenScape Landscaping,PO-00163
+REC-00164,VEN-006,NimbusTech Solutions,IT & Software,2026-06-16,3919.09,IT & Software — NimbusTech Solutions,PO-00164
+REC-00165,VEN-003,CleanSweep Co,Cleaning Services,2026-06-18,1223.98,Cleaning Services — CleanSweep Co,PO-00165
+REC-00166,VEN-002,BrightPower Utilities,Utilities,2026-06-19,2376.34,Utilities — BrightPower Utilities,PO-00166
+REC-00167,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-20,2848.19,Repairs & Maintenance — Reliable Repairs Ltd,PO-00167
+REC-00168,VEN-006,NimbusTech Solutions,IT & Software,2026-06-20,4027.96,IT & Software — NimbusTech Solutions,PO-00168
+REC-00169,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-21,2392.16,Repairs & Maintenance — Reliable Repairs Ltd,PO-00169
+REC-00170,VEN-003,CleanSweep Co,Cleaning Services,2026-06-21,1590.09,Cleaning Services — CleanSweep Co,PO-00170
+REC-00171,VEN-003,CleanSweep Co,Cleaning Services,2026-06-22,840.43,Cleaning Services — CleanSweep Co,PO-00171
+REC-00172,VEN-003,CleanSweep Co,Cleaning Services,2026-06-23,581.31,Cleaning Services — CleanSweep Co,PO-00172
+REC-00173,VEN-005,GreenScape Landscaping,Landscaping,2026-06-24,652.4,Landscaping — GreenScape Landscaping,PO-00173
+REC-00174,VEN-006,NimbusTech Solutions,IT & Software,2026-06-24,965.23,IT & Software — NimbusTech Solutions,PO-00174
+REC-00175,VEN-003,CleanSweep Co,Cleaning Services,2026-06-25,749.12,Cleaning Services — CleanSweep Co,PO-00175
+REC-00176,VEN-002,BrightPower Utilities,Utilities,2026-06-25,8591.08,Utilities — BrightPower Utilities,PO-00176
+REC-00177,VEN-006,NimbusTech Solutions,IT & Software,2026-06-26,913.74,IT & Software — NimbusTech Solutions,PO-00177
+REC-00178,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-28,4839.45,Repairs & Maintenance — Reliable Repairs Ltd,PO-00178
+REC-00179,VEN-002,BrightPower Utilities,Utilities,2026-06-29,4529.65,Utilities — BrightPower Utilities,PO-00179
+REC-00180,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-29,4673.27,Repairs & Maintenance — Reliable Repairs Ltd,PO-00180
+REC-00181,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-06-30,5979.31,Repairs & Maintenance — Reliable Repairs Ltd,PO-00181
+REC-00182,VEN-006,NimbusTech Solutions,IT & Software,2026-06-30,2428.78,IT & Software — NimbusTech Solutions,PO-00182
+REC-00183,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-07-01,1223.66,Repairs & Maintenance — Reliable Repairs Ltd,PO-00183
+REC-00184,VEN-006,NimbusTech Solutions,IT & Software,2026-07-02,1904.17,IT & Software — NimbusTech Solutions,PO-00184
+REC-00185,VEN-002,BrightPower Utilities,Utilities,2026-07-03,10565.15,Utilities — BrightPower Utilities,PO-00185
+REC-00186,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-07-03,3590.42,Repairs & Maintenance — Reliable Repairs Ltd,PO-00186
+REC-00187,VEN-006,NimbusTech Solutions,IT & Software,2026-07-03,2726.84,IT & Software — NimbusTech Solutions,PO-00187
+REC-00188,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-07-04,1419.79,Repairs & Maintenance — Reliable Repairs Ltd,PO-00188
+REC-00189,VEN-002,BrightPower Utilities,Utilities,2026-07-05,3287.98,Utilities — BrightPower Utilities,PO-00189
+REC-00190,VEN-002,BrightPower Utilities,Utilities,2026-07-05,3503.7,Utilities — BrightPower Utilities,PO-00190
+REC-00191,VEN-004,Sentinel Security Group,Security Services,2026-07-06,6462.37,Security Services — Sentinel Security Group,PO-00191
+REC-00192,VEN-002,BrightPower Utilities,Utilities,2026-07-06,3935.04,Utilities — BrightPower Utilities,PO-00192
+REC-00193,VEN-002,BrightPower Utilities,Utilities,2026-07-07,3957.05,Utilities — BrightPower Utilities,PO-00193
+REC-00194,VEN-002,BrightPower Utilities,Utilities,2026-07-08,8580.08,Utilities — BrightPower Utilities,PO-00194
+REC-00195,VEN-006,NimbusTech Solutions,IT & Software,2026-07-08,829.5,IT & Software — NimbusTech Solutions,PO-00195
+REC-00196,VEN-002,BrightPower Utilities,Utilities,2026-07-10,6743.02,Utilities — BrightPower Utilities,PO-00196
+REC-00197,VEN-004,Sentinel Security Group,Security Services,2026-07-10,1223.77,Security Services — Sentinel Security Group,PO-00197
+REC-00198,VEN-002,BrightPower Utilities,Utilities,2026-07-11,6727.82,Utilities — BrightPower Utilities,PO-00198
+REC-00199,VEN-005,GreenScape Landscaping,Landscaping,2026-07-12,273.7,Landscaping — GreenScape Landscaping,PO-00199
+REC-00200,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-07-14,9277.44,Repairs & Maintenance — Apex Facility Services,PO-00200
+REC-00201,VEN-003,CleanSweep Co,Cleaning Services,2026-07-14,550.16,Cleaning Services — CleanSweep Co,PO-00201
+REC-00202,VEN-004,Sentinel Security Group,Security Services,2026-07-14,694.13,Security Services — Sentinel Security Group,PO-00202
+REC-00203,VEN-003,CleanSweep Co,Cleaning Services,2026-07-15,3670.88,Cleaning Services — CleanSweep Co,PO-00203
+REC-00204,VEN-002,BrightPower Utilities,Utilities,2026-07-17,3098.13,Utilities — BrightPower Utilities,PO-00204
+REC-00205,VEN-005,GreenScape Landscaping,Landscaping,2026-07-19,1461.52,Landscaping — GreenScape Landscaping,PO-00205
+REC-00206,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-07-20,1127.06,Repairs & Maintenance — Apex Facility Services,PO-00206
+REC-00207,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-07-21,2750.97,Repairs & Maintenance — Apex Facility Services,PO-00207
+REC-00208,VEN-006,NimbusTech Solutions,IT & Software,2026-07-22,1876.38,IT & Software — NimbusTech Solutions,PO-00208
+REC-00209,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-07-22,2863.37,Repairs & Maintenance — Reliable Repairs Ltd,PO-00209
+REC-00210,VEN-002,BrightPower Utilities,Utilities,2026-07-23,4156.43,Utilities — BrightPower Utilities,PO-00210
+REC-00211,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-07-23,2405.67,Repairs & Maintenance — Reliable Repairs Ltd,PO-00211
+REC-00212,VEN-005,GreenScape Landscaping,Landscaping,2026-07-26,2146.75,Landscaping — GreenScape Landscaping,PO-00212
+REC-00213,VEN-006,NimbusTech Solutions,IT & Software,2026-07-28,2651.5,IT & Software — NimbusTech Solutions,PO-00213
+REC-00214,VEN-003,CleanSweep Co,Cleaning Services,2026-08-02,1196.89,Cleaning Services — CleanSweep Co,PO-00214
+REC-00215,VEN-005,GreenScape Landscaping,Landscaping,2026-08-02,1126.59,Landscaping — GreenScape Landscaping,PO-00215
+REC-00216,VEN-006,NimbusTech Solutions,IT & Software,2026-08-02,4791.3,IT & Software — NimbusTech Solutions,PO-00216
+REC-00217,VEN-004,Sentinel Security Group,Security Services,2026-08-04,4026.72,Security Services — Sentinel Security Group,PO-00217
+REC-00218,VEN-005,GreenScape Landscaping,Landscaping,2026-08-06,611.05,Landscaping — GreenScape Landscaping,PO-00218
+REC-00219,VEN-006,NimbusTech Solutions,IT & Software,2026-08-06,4006.09,IT & Software — NimbusTech Solutions,PO-00219
+REC-00220,VEN-003,CleanSweep Co,Cleaning Services,2026-08-07,1559.23,Cleaning Services — CleanSweep Co,PO-00220
+REC-00221,VEN-003,CleanSweep Co,Cleaning Services,2026-08-07,852.96,Cleaning Services — CleanSweep Co,PO-00221
+REC-00222,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-08,5120.31,Repairs & Maintenance — Reliable Repairs Ltd,PO-00222
+REC-00223,VEN-004,Sentinel Security Group,Security Services,2026-08-08,1697.5,Security Services — Sentinel Security Group,PO-00223
+REC-00224,VEN-003,CleanSweep Co,Cleaning Services,2026-08-08,1844.57,Cleaning Services — CleanSweep Co,PO-00224
+REC-00225,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-09,9394.12,Repairs & Maintenance — Reliable Repairs Ltd,PO-00225
+REC-00226,VEN-004,Sentinel Security Group,Security Services,2026-08-11,1426.22,Security Services — Sentinel Security Group,PO-00226
+REC-00227,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-11,2508.43,Repairs & Maintenance — Reliable Repairs Ltd,PO-00227
+REC-00228,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-08-12,3352.94,Repairs & Maintenance — Apex Facility Services,PO-00228
+REC-00229,VEN-005,GreenScape Landscaping,Landscaping,2026-08-12,806.93,Landscaping — GreenScape Landscaping,PO-00229
+REC-00230,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-12,1642.69,Repairs & Maintenance — Reliable Repairs Ltd,PO-00230
+REC-00231,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-08-14,3857.96,Repairs & Maintenance — Apex Facility Services,PO-00231
+REC-00232,VEN-004,Sentinel Security Group,Security Services,2026-08-14,2406.74,Security Services — Sentinel Security Group,PO-00232
+REC-00233,VEN-003,CleanSweep Co,Cleaning Services,2026-08-14,1070.25,Cleaning Services — CleanSweep Co,PO-00233
+REC-00234,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-16,3403.97,Repairs & Maintenance — Reliable Repairs Ltd,PO-00234
+REC-00235,VEN-003,CleanSweep Co,Cleaning Services,2026-08-16,1527.51,Cleaning Services — CleanSweep Co,PO-00235
+REC-00236,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-08-17,3827.43,Repairs & Maintenance — Apex Facility Services,PO-00236
+REC-00237,VEN-006,NimbusTech Solutions,IT & Software,2026-08-17,4410.13,IT & Software — NimbusTech Solutions,PO-00237
+REC-00238,VEN-004,Sentinel Security Group,Security Services,2026-08-18,2642.37,Security Services — Sentinel Security Group,PO-00238
+REC-00239,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-19,2373.36,Repairs & Maintenance — Reliable Repairs Ltd,PO-00239
+REC-00240,VEN-003,CleanSweep Co,Cleaning Services,2026-08-19,1479.84,Cleaning Services — CleanSweep Co,PO-00240
+REC-00241,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-08-20,3054.22,Repairs & Maintenance — Reliable Repairs Ltd,PO-00241
+REC-00242,VEN-002,BrightPower Utilities,Utilities,2026-08-24,6689.5,Utilities — BrightPower Utilities,PO-00242
+REC-00243,VEN-002,BrightPower Utilities,Utilities,2026-08-24,12335.94,Utilities — BrightPower Utilities,PO-00243
+REC-00244,VEN-002,BrightPower Utilities,Utilities,2026-08-24,5932.07,Utilities — BrightPower Utilities,PO-00244
+REC-00245,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-08-25,1740.33,Repairs & Maintenance — Apex Facility Services,PO-00245
+REC-00246,VEN-005,GreenScape Landscaping,Landscaping,2026-08-26,402.62,Landscaping — GreenScape Landscaping,PO-00246
+REC-00247,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-08-26,2412.31,Repairs & Maintenance — Apex Facility Services,PO-00247
+REC-00248,VEN-004,Sentinel Security Group,Security Services,2026-08-29,808.7,Security Services — Sentinel Security Group,PO-00248
+REC-00249,VEN-004,Sentinel Security Group,Security Services,2026-08-30,1906.38,Security Services — Sentinel Security Group,PO-00249
+REC-00250,VEN-006,NimbusTech Solutions,IT & Software,2026-09-01,4245.43,IT & Software — NimbusTech Solutions,PO-00250
+REC-00251,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-09-02,2294.2,Repairs & Maintenance — Reliable Repairs Ltd,PO-00251
+REC-00252,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-09-02,12835.29,Repairs & Maintenance — Apex Facility Services,PO-00252
+REC-00253,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-09-02,932.57,Repairs & Maintenance — Apex Facility Services,PO-00253
+REC-00254,VEN-006,NimbusTech Solutions,IT & Software,2026-09-03,4108.49,IT & Software — NimbusTech Solutions,PO-00254
+REC-00255,VEN-004,Sentinel Security Group,Security Services,2026-09-04,455.34,Security Services — Sentinel Security Group,PO-00255
+REC-00256,VEN-004,Sentinel Security Group,Security Services,2026-09-06,4163.77,Security Services — Sentinel Security Group,PO-00256
+REC-00257,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-09-06,1439.3,Repairs & Maintenance — Apex Facility Services,PO-00257
+REC-00258,VEN-006,NimbusTech Solutions,IT & Software,2026-09-07,1816.61,IT & Software — NimbusTech Solutions,PO-00258
+REC-00259,VEN-007,Reliable Repairs Ltd,Repairs & Maintenance,2026-09-09,1096.31,Repairs & Maintenance — Reliable Repairs Ltd,PO-00259
+REC-00260,VEN-005,GreenScape Landscaping,Landscaping,2026-09-11,1777.58,Landscaping — GreenScape Landscaping,PO-00260
+REC-00261,VEN-006,NimbusTech Solutions,IT & Software,2026-09-12,1335.87,IT & Software — NimbusTech Solutions,PO-00261
+REC-00262,VEN-006,NimbusTech Solutions,IT & Software,2026-09-13,3654.41,IT & Software — NimbusTech Solutions,PO-00262
+REC-00263,VEN-003,CleanSweep Co,Cleaning Services,2026-09-14,827.53,Cleaning Services — CleanSweep Co,PO-00263
+REC-00264,VEN-006,NimbusTech Solutions,IT & Software,2026-09-15,497.92,IT & Software — NimbusTech Solutions,PO-00264
+REC-00265,VEN-005,GreenScape Landscaping,Landscaping,2026-09-15,1520.09,Landscaping — GreenScape Landscaping,PO-00265
+REC-00266,VEN-002,BrightPower Utilities,Utilities,2026-09-16,5847.87,Utilities — BrightPower Utilities,PO-00266
+REC-00267,VEN-002,BrightPower Utilities,Utilities,2026-09-16,9760.4,Utilities — BrightPower Utilities,PO-00267
+REC-00268,VEN-006,NimbusTech Solutions,IT & Software,2026-09-17,2657.34,IT & Software — NimbusTech Solutions,PO-00268
+REC-00269,VEN-006,NimbusTech Solutions,IT & Software,2026-09-18,3248.11,IT & Software — NimbusTech Solutions,PO-00269
+REC-00270,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-09-21,2793.13,Repairs & Maintenance — Apex Facility Services,PO-00270
+REC-00271,VEN-006,NimbusTech Solutions,IT & Software,2026-09-21,3583.57,IT & Software — NimbusTech Solutions,PO-00271
+REC-00272,VEN-006,NimbusTech Solutions,IT & Software,2026-09-21,1829.89,IT & Software — NimbusTech Solutions,PO-00272
+REC-00273,VEN-004,Sentinel Security Group,Security Services,2026-09-22,1311.02,Security Services — Sentinel Security Group,PO-00273
+REC-00274,VEN-001,Apex Facility Services,Repairs & Maintenance,2026-09-23,2944.29,Repairs & Maintenance — Apex Facility Services,PO-00274
+REC-00275,VEN-003,CleanSweep Co,Cleaning Services,2026-09-23,667.22,Cleaning Services — CleanSweep Co,PO-00275
+REC-00276,VEN-006,NimbusTech Solutions,IT & Software,2026-09-24,3848.27,IT & Software — NimbusTech Solutions,PO-00276
+REC-00277,VEN-005,GreenScape Landscaping,Landscaping,2026-09-24,349.63,Landscaping — GreenScape Landscaping,PO-00277
+REC-00278,VEN-005,GreenScape Landscaping,Landscaping,2026-09-26,1086.82,Landscaping — GreenScape Landscaping,PO-00278
+REC-00279,VEN-002,BrightPower Utilities,Utilities,2026-09-27,14064.62,Utilities — BrightPower Utilities,PO-00279
+REC-00280,VEN-003,CleanSweep Co,Cleaning Services,2026-09-29,1926.49,Cleaning Services — CleanSweep Co,PO-00280

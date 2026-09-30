@@ -1,0 +1,101 @@
+building_id,asset_id,name,asset_type,location
+BLD-HQ-01,AST-001,Chiller 001,Chiller,Mechanical Room 1
+BLD-HQ-01,AST-002,Air Handling Unit 002,Air Handling Unit,Floor 2 Plant Room
+BLD-HQ-01,AST-003,Cooling Tower 003,Cooling Tower,Rooftop
+BLD-HQ-01,AST-004,Boiler 004,Boiler,Mechanical Room 4
+BLD-HQ-01,AST-005,Pump Set 005,Pump Set,Basement Utility 5
+BLD-HQ-01,AST-006,Chiller 006,Chiller,Mechanical Room 6
+BLD-HQ-01,AST-007,Air Handling Unit 007,Air Handling Unit,Floor 1 Plant Room
+BLD-HQ-01,AST-008,Cooling Tower 008,Cooling Tower,Rooftop
+BLD-HQ-01,AST-009,Boiler 009,Boiler,Mechanical Room 3
+BLD-HQ-01,AST-010,Pump Set 010,Pump Set,Basement Utility 4
+BLD-HQ-01,AST-011,Chiller 011,Chiller,Mechanical Room 5
+BLD-HQ-01,AST-012,Air Handling Unit 012,Air Handling Unit,Floor 6 Plant Room
+BLD-HQ-01,AST-013,Cooling Tower 013,Cooling Tower,Rooftop
+BLD-HQ-01,AST-014,Boiler 014,Boiler,Mechanical Room 2
+BLD-HQ-01,AST-015,Pump Set 015,Pump Set,Basement Utility 3
+BLD-HQ-01,AST-016,Chiller 016,Chiller,Mechanical Room 4
+BLD-HQ-01,AST-017,Air Handling Unit 017,Air Handling Unit,Floor 5 Plant Room
+BLD-HQ-01,AST-018,Cooling Tower 018,Cooling Tower,Rooftop
+BLD-HQ-01,AST-019,Boiler 019,Boiler,Mechanical Room 1
+BLD-HQ-01,AST-020,Pump Set 020,Pump Set,Basement Utility 2
+BLD-HQ-01,AST-021,Chiller 021,Chiller,Mechanical Room 3
+BLD-HQ-01,AST-022,Air Handling Unit 022,Air Handling Unit,Floor 4 Plant Room
+BLD-HQ-01,AST-023,Cooling Tower 023,Cooling Tower,Rooftop
+BLD-HQ-01,AST-024,Boiler 024,Boiler,Mechanical Room 6
+BLD-HQ-01,AST-025,Pump Set 025,Pump Set,Basement Utility 1
+BLD-HQ-01,AST-026,Chiller 026,Chiller,Mechanical Room 2
+BLD-HQ-01,AST-027,Air Handling Unit 027,Air Handling Unit,Floor 3 Plant Room
+BLD-HQ-01,AST-028,Cooling Tower 028,Cooling Tower,Rooftop
+BLD-HQ-01,AST-029,Boiler 029,Boiler,Mechanical Room 5
+BLD-HQ-01,AST-030,Pump Set 030,Pump Set,Basement Utility 6
+BLD-HQ-01,AST-031,Chiller 031,Chiller,Mechanical Room 1
+BLD-HQ-01,AST-032,Air Handling Unit 032,Air Handling Unit,Floor 2 Plant Room
+BLD-HQ-01,AST-033,Cooling Tower 033,Cooling Tower,Rooftop
+BLD-HQ-01,AST-034,Boiler 034,Boiler,Mechanical Room 4
+BLD-HQ-01,AST-035,Pump Set 035,Pump Set,Basement Utility 5
+BLD-HQ-01,AST-036,Chiller 036,Chiller,Mechanical Room 6
+BLD-HQ-01,AST-037,Air Handling Unit 037,Air Handling Unit,Floor 1 Plant Room
+BLD-HQ-01,AST-038,Cooling Tower 038,Cooling Tower,Rooftop
+BLD-HQ-01,AST-039,Boiler 039,Boiler,Mechanical Room 3
+BLD-HQ-01,AST-040,Pump Set 040,Pump Set,Basement Utility 4
+BLD-HQ-01,AST-041,Chiller 041,Chiller,Mechanical Room 5
+BLD-HQ-01,AST-042,Air Handling Unit 042,Air Handling Unit,Floor 6 Plant Room
+BLD-HQ-01,AST-043,Cooling Tower 043,Cooling Tower,Rooftop
+BLD-HQ-01,AST-044,Boiler 044,Boiler,Mechanical Room 2
+BLD-HQ-01,AST-045,Pump Set 045,Pump Set,Basement Utility 3
+BLD-HQ-01,AST-046,Chiller 046,Chiller,Mechanical Room 4
+BLD-HQ-01,AST-047,Air Handling Unit 047,Air Handling Unit,Floor 5 Plant Room
+BLD-HQ-01,AST-048,Cooling Tower 048,Cooling Tower,Rooftop
+BLD-HQ-01,AST-049,Boiler 049,Boiler,Mechanical Room 1
+BLD-HQ-01,AST-050,Pump Set 050,Pump Set,Basement Utility 2
+BLD-HQ-01,AST-051,Chiller 051,Chiller,Mechanical Room 3
+BLD-HQ-01,AST-052,Air Handling Unit 052,Air Handling Unit,Floor 4 Plant Room
+BLD-HQ-01,AST-053,Cooling Tower 053,Cooling Tower,Rooftop
+BLD-HQ-01,AST-054,Boiler 054,Boiler,Mechanical Room 6
+BLD-HQ-01,AST-055,Pump Set 055,Pump Set,Basement Utility 1
+BLD-HQ-01,AST-056,Chiller 056,Chiller,Mechanical Room 2
+BLD-HQ-01,AST-057,Air Handling Unit 057,Air Handling Unit,Floor 3 Plant Room
+BLD-HQ-01,AST-058,Cooling Tower 058,Cooling Tower,Rooftop
+BLD-HQ-01,AST-059,Boiler 059,Boiler,Mechanical Room 5
+BLD-HQ-01,AST-060,Pump Set 060,Pump Set,Basement Utility 6
+BLD-HQ-01,AST-061,Chiller 061,Chiller,Mechanical Room 1
+BLD-HQ-01,AST-062,Air Handling Unit 062,Air Handling Unit,Floor 2 Plant Room
+BLD-HQ-01,AST-063,Cooling Tower 063,Cooling Tower,Rooftop
+BLD-HQ-01,AST-064,Boiler 064,Boiler,Mechanical Room 4
+BLD-HQ-01,AST-065,Pump Set 065,Pump Set,Basement Utility 5
+BLD-HQ-01,AST-066,Chiller 066,Chiller,Mechanical Room 6
+BLD-HQ-01,AST-067,Air Handling Unit 067,Air Handling Unit,Floor 1 Plant Room
+BLD-HQ-01,AST-068,Cooling Tower 068,Cooling Tower,Rooftop
+BLD-HQ-01,AST-069,Boiler 069,Boiler,Mechanical Room 3
+BLD-HQ-01,AST-070,Pump Set 070,Pump Set,Basement Utility 4
+BLD-HQ-01,AST-071,Chiller 071,Chiller,Mechanical Room 5
+BLD-HQ-01,AST-072,Air Handling Unit 072,Air Handling Unit,Floor 6 Plant Room
+BLD-HQ-01,AST-073,Cooling Tower 073,Cooling Tower,Rooftop
+BLD-HQ-01,AST-074,Boiler 074,Boiler,Mechanical Room 2
+BLD-HQ-01,AST-075,Pump Set 075,Pump Set,Basement Utility 3
+BLD-HQ-01,AST-076,Chiller 076,Chiller,Mechanical Room 4
+BLD-HQ-01,AST-077,Air Handling Unit 077,Air Handling Unit,Floor 5 Plant Room
+BLD-HQ-01,AST-078,Cooling Tower 078,Cooling Tower,Rooftop
+BLD-HQ-01,AST-079,Boiler 079,Boiler,Mechanical Room 1
+BLD-HQ-01,AST-080,Pump Set 080,Pump Set,Basement Utility 2
+BLD-HQ-01,AST-081,Chiller 081,Chiller,Mechanical Room 3
+BLD-HQ-01,AST-082,Air Handling Unit 082,Air Handling Unit,Floor 4 Plant Room
+BLD-HQ-01,AST-083,Cooling Tower 083,Cooling Tower,Rooftop
+BLD-HQ-01,AST-084,Boiler 084,Boiler,Mechanical Room 6
+BLD-HQ-01,AST-085,Pump Set 085,Pump Set,Basement Utility 1
+BLD-HQ-01,AST-086,Chiller 086,Chiller,Mechanical Room 2
+BLD-HQ-01,AST-087,Air Handling Unit 087,Air Handling Unit,Floor 3 Plant Room
+BLD-HQ-01,AST-088,Cooling Tower 088,Cooling Tower,Rooftop
+BLD-HQ-01,AST-089,Boiler 089,Boiler,Mechanical Room 5
+BLD-HQ-01,AST-090,Pump Set 090,Pump Set,Basement Utility 6
+BLD-HQ-01,AST-091,Chiller 091,Chiller,Mechanical Room 1
+BLD-HQ-01,AST-092,Air Handling Unit 092,Air Handling Unit,Floor 2 Plant Room
+BLD-HQ-01,AST-093,Cooling Tower 093,Cooling Tower,Rooftop
+BLD-HQ-01,AST-094,Boiler 094,Boiler,Mechanical Room 4
+BLD-HQ-01,AST-095,Pump Set 095,Pump Set,Basement Utility 5
+BLD-HQ-01,AST-096,Chiller 096,Chiller,Mechanical Room 6
+BLD-HQ-01,AST-097,Air Handling Unit 097,Air Handling Unit,Floor 1 Plant Room
+BLD-HQ-01,AST-098,Cooling Tower 098,Cooling Tower,Rooftop
+BLD-HQ-01,AST-099,Boiler 099,Boiler,Mechanical Room 3
+BLD-HQ-01,AST-100,Pump Set 100,Pump Set,Basement Utility 4

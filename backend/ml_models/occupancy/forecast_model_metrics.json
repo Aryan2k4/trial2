@@ -1,0 +1,62 @@
+{
+  "features": [
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "capacity",
+    "util_now",
+    "util_rolling_mean_4h",
+    "util_rolling_std_4h",
+    "util_same_hour_yesterday",
+    "util_same_hour_last_week",
+    "is_workspace",
+    "is_meeting_room",
+    "is_common_area",
+    "is_restricted"
+  ],
+  "best_model": "hist_gradient_boosting",
+  "all_models": {
+    "linear_regression": {
+      "held_out_test_mae_pct": 16.65,
+      "held_out_test_r2": 0.3378,
+      "cv_mae_pct": 20.15
+    },
+    "random_forest": {
+      "held_out_test_mae_pct": 7.76,
+      "held_out_test_r2": 0.8093,
+      "cv_mae_pct": 12.36
+    },
+    "gradient_boosting": {
+      "held_out_test_mae_pct": 7.82,
+      "held_out_test_r2": 0.7989,
+      "cv_mae_pct": 12.88
+    },
+    "hist_gradient_boosting": {
+      "held_out_test_mae_pct": 7.75,
+      "held_out_test_r2": 0.8072,
+      "cv_mae_pct": 13.04
+    }
+  },
+  "naive_flat_mae_pct": 10.24,
+  "naive_same_hour_yesterday_mae_pct": 26.5,
+  "improvement_over_best_naive_pct": 24.3,
+  "feature_importance": null,
+  "training_distribution": {
+    "util_now": {
+      "mean": 27.904,
+      "std": 36.39
+    },
+    "capacity": {
+      "mean": 36.125,
+      "std": 30.227
+    }
+  },
+  "train_rows": 9118,
+  "test_rows": 1610,
+  "horizon_minutes": 60,
+  "note": "Predicts zone utilization_pct ~1 hour ahead from that zone's own recent history (hour/day-of-week cycles, rolling trend, same-hour-yesterday/last-week, zone type/capacity). Recomputes live from whatever is currently in the ZoneReading table, including an uploaded CSV \u2014 unlike the UCI-sensor-based Occupied/Empty classifier, which only ever evaluates its own fixed held-out test samples since the live table doesn't carry the sensor columns that model needs."
+}
