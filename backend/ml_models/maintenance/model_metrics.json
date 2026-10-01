@@ -108,7 +108,7 @@
   "n_train_engines": 100,
   "n_test_engines_held_out": 100,
   "note": "Held-out test set is NASA's official test_FD001 + RUL_FD001 answer key \u2014 engines never seen during training, each truncated mid-life. Reported as-is. ensemble_blend (when selected as best_model) is a real deployed AveragingEnsemble over the tuned hist_gradient_boosting and gradient_boosting models, not a one-off printout number.",
-  "live_model": "ensemble_blend",
+  "live_model": "lstm_deep_learning",
   "lstm_vs_tree_comparison": {
     "lstm_mae_cycles": 10.44,
     "tree_mae_cycles": 12.31,
