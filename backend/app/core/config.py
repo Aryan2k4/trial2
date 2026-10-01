@@ -34,14 +34,14 @@ class Settings:
     OFF_HOURS_END: int = 6                  # 6 AM
     BASELINE_WASTE_THRESHOLD_PCT: float = 15.0  # off-hours load vs daytime avg
 
-    CORS_ORIGINS: list = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-    ]
+    # Comma-separated list of allowed browser origins. Local dev origins are
+    # the default; in production set CORS_ORIGINS to your deployed frontend
+    # URL (e.g. https://your-app.vercel.app, no trailing slash).
+    CORS_ORIGINS: list = [o.strip() for o in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,"
+        "http://127.0.0.1:3000,http://localhost:5174,http://127.0.0.1:5174",
+    ).split(",") if o.strip()]
 
     # LLM provider for the Intelligence Engine's briefing/investigation.
     # "mock" (default) works with no API key. "groq" (recommended real
