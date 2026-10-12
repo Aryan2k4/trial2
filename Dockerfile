@@ -4,6 +4,9 @@ WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
+# Keep browser API requests on this same service regardless of any local
+# frontend/.env.production file (which is intentionally ignored by Git).
+ENV VITE_API_BASE_URL=/api
 RUN npm run build
 
 FROM python:3.12-slim
