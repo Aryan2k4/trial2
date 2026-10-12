@@ -1,12 +1,11 @@
 import logging
-from pathlib import Path
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 
-from app.core.config import settings
+from app.core.config import BASE_DIR, settings
 from app.core.database import init_db, SessionLocal
 from app.api.routes import router as energy_router
 from app.api.maintenance_routes import router as maintenance_router
@@ -21,6 +20,16 @@ from app.core.security import hash_password
 from app.models.auth_models import User
 
 logger = logging.getLogger(__name__)
+
+# The production container copies Vite's build output here. Keeping the API
+# and SPA in one FastAPI process gives the app one public URL and lets browser
+# requests use the relative /api path (no cross-origin configuration needed).
+FRONTEND_DIST = BASE_DIR / "frontend_dist"
+# In local development Vite writes to frontend/dist, whereas the production
+# image copies that same build into backend/frontend_dist.
+if not FRONTEND_DIST.is_dir():
+    FRONTEND_DIST = BASE_DIR.parent / "frontend" / "dist"
+FRONTEND_INDEX = FRONTEND_DIST / "index.html"
 
 
 @asynccontextmanager
@@ -145,60 +154,34 @@ app.include_router(system_router, prefix=settings.API_V1_PREFIX)
 app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
 
 
-# Locate production frontend static build (for single-link unified deployment)
-base_backend = Path(__file__).resolve().parent.parent
-
-static_candidates = [
-    base_backend / "static",                                # backend/static
-    base_backend.parent / "static",                         # repo_root/static
-    base_backend.parent / "frontend" / "dist",              # frontend/dist
-    Path("static").resolve(),
-    Path("backend/static").resolve(),
-    Path("/app/static"),
-    Path("/app/backend/static"),
-]
-
-frontend_dir = None
-for candidate in static_candidates:
-    if candidate.exists() and (candidate / "index.html").exists():
-        frontend_dir = candidate
-        break
+@app.get("/")
+def root():
+    if FRONTEND_INDEX.is_file():
+        return FileResponse(FRONTEND_INDEX)
+    return {"service": settings.PROJECT_NAME, "status": "running", "docs": "/docs"}
 
 
 @app.get("/health")
 def health():
-    return {
-        "status": "healthy",
-        "frontend_mounted": frontend_dir is not None,
-        "frontend_dir": str(frontend_dir) if frontend_dir else None,
-        "deploy_version": "v2_fullstack"
-    }
+    return {"status": "healthy"}
 
 
-if frontend_dir:
-    logger.info(f"Serving frontend from {frontend_dir}")
-    assets_dir = frontend_dir / "assets"
-    if assets_dir.exists():
-        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend_assets")
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_frontend(full_path: str):
+    """Serve Vite assets directly and fall back to the SPA for client routes."""
+    if not FRONTEND_INDEX.is_file():
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
 
-    @app.get("/")
-    def serve_root():
-        return FileResponse(frontend_dir / "index.html")
+    # API typos must remain normal API 404s rather than returning the SPA.
+    if full_path.startswith("api/"):
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
 
-    @app.get("/{full_path:path}")
-    async def serve_spa(full_path: str):
-        # Do not intercept API, health, docs, or OpenAPI endpoints
-        if (
-            full_path.startswith("api")
-            or full_path == "api"
-            or full_path in ("health", "docs", "redoc", "openapi.json")
-        ):
-            return JSONResponse(status_code=404, content={"detail": "Not Found"})
-        file_path = frontend_dir / full_path
-        if full_path and file_path.is_file():
-            return FileResponse(file_path)
-        return FileResponse(frontend_dir / "index.html")
-else:
-    @app.get("/")
-    def root():
-        return {"service": settings.PROJECT_NAME, "status": "running", "docs": "/docs"}
+    requested_file = (FRONTEND_DIST / full_path).resolve()
+    try:
+        requested_file.relative_to(FRONTEND_DIST.resolve())
+    except ValueError:
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
+
+    if requested_file.is_file():
+        return FileResponse(requested_file)
+    return FileResponse(FRONTEND_INDEX)

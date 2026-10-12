@@ -20,9 +20,13 @@ class Settings:
     PROJECT_NAME: str = "Infosys_Agentic AI for Smart Facility Operations and Optimization"
     API_V1_PREFIX: str = "/api"
 
+    # Render exposes PostgreSQL URLs with the historic ``postgres://``
+    # scheme. SQLAlchemy requires a dialect/driver-qualified URL, so accept
+    # both Render's value and the normal local SQLite value without asking the
+    # deployer to translate it manually.
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL", f"sqlite:///{BASE_DIR / 'data' / 'facilityops.db'}"
-    )
+    ).replace("postgres://", "postgresql+psycopg://", 1)
 
     # Data ingestion source (Milestone 1: utility/IoT data integration).
     # Points at the processed CSV that stands in for a real utility/IoT feed.

@@ -13,3 +13,5 @@ build/
 *.db
 *.db-wal
 *.db-shm
+backend/codex-backend-tests.*
+/codex-docker-build.*
