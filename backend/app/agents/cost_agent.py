@@ -20,6 +20,14 @@ ANOMALY_SCORE_THRESHOLD = 0.55
 VENDOR_CONCENTRATION_WARNING_PCT = 60.0
 
 
+import time
+import threading
+
+_cost_cache = {}
+_cost_lock = threading.Lock()
+CACHE_TTL = 30.0
+
+
 class CostAgent:
     def __init__(self, db: Session, building_id: str = "BLD-HQ-01"):
         self.db = db
@@ -28,6 +36,13 @@ class CostAgent:
         self.budgets = cost_service.list_budgets(db, building_id)
 
     def analyze(self) -> dict:
+        now = time.time()
+        with _cost_lock:
+            if self.building_id in _cost_cache:
+                entry = _cost_cache[self.building_id]
+                if now - entry["timestamp"] < CACHE_TTL:
+                    return entry["data"]
+
         records = cost_service.get_records_df(self.db, self.building_id)
         scored = score_records(records)
         vendors_meta = [{
@@ -36,7 +51,7 @@ class CostAgent:
         } for v in self.vendors]
         budgets_meta = [{"category": b.category, "monthly_budget_inr": b.monthly_budget_inr, "basis": b.basis} for b in self.budgets]
 
-        return {
+        data = {
             "summary": spend_summary(records),
             "category_breakdown": category_breakdown(records),
             "flagged_invoices": top_flagged_records(scored, limit=20),
@@ -44,6 +59,9 @@ class CostAgent:
             "budget_compliance": budget_compliance(records, budgets_meta),
             "vendor_concentration": vendor_concentration(vendors_meta),
         }
+        with _cost_lock:
+            _cost_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+        return data
 
     def recommend(self, analysis: dict | None = None) -> list[dict]:
         analysis = analysis or self.analyze()

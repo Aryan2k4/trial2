@@ -26,20 +26,32 @@ from app.utils.energy_analytics import (
 )
 
 
+import time
+import threading
+
+_energy_cache = {}
+_energy_lock = threading.Lock()
+CACHE_TTL = 30.0
+
+
 class EnergyAgent:
     def __init__(self, db: Session, building_id: str, limit: int | None = None):
         self.db = db
         self.building_id = building_id
-        df = get_readings_df(db, building_id)
-        # If a window is requested (e.g. "last 24h"/"last 7 days" from the
-        # dashboard's range selector), trim to just that many most-recent
-        # rows so KPIs/analytics reflect the selected range instead of
-        # always summarizing the entire dataset regardless of what's shown.
-        self.df = df.tail(limit) if limit else df
+        self.limit = limit
+        self.df = get_readings_df(db, building_id, limit=limit)
 
     # ---- Analysis -------------------------------------------------
     def analyze(self) -> dict:
-        return {
+        cache_key = f"{self.building_id}:{self.limit}"
+        now = time.time()
+        with _energy_lock:
+            if cache_key in _energy_cache:
+                entry = _energy_cache[cache_key]
+                if now - entry["timestamp"] < CACHE_TTL:
+                    return entry["data"]
+
+        data = {
             "consumption": consumption_summary(self.df),
             "breakdown": submeter_breakdown(self.df),
             "trend_pct_vs_prev_period": trend_pct(self.df),
@@ -48,6 +60,9 @@ class EnergyAgent:
             "temperature": temperature_correlation(self.df),
             "occupancy": occupancy_correlation(self.df),
         }
+        with _energy_lock:
+            _energy_cache[cache_key] = {"timestamp": time.time(), "data": data}
+        return data
 
     # ---- Recommendations -------------------------------------------
     def recommend(self, analysis: dict | None = None) -> list[dict]:

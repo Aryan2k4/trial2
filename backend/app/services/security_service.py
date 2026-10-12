@@ -75,19 +75,34 @@ def list_access_points(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> l
     return db.query(AccessPoint).filter(AccessPoint.building_id == building_id).all()
 
 
-def get_recent_events_df(db: Session, limit: int = 3000) -> pd.DataFrame:
-    rows = db.query(AccessEvent).order_by(AccessEvent.timestamp.desc()).limit(limit).all()
+def get_recent_events_df(db: Session, limit: int = 1500) -> pd.DataFrame:
+    rows = (
+        db.query(
+            AccessEvent.event_id,
+            AccessEvent.access_point_id,
+            AccessEvent.employee_id,
+            AccessEvent.timestamp,
+            AccessEvent.access_granted,
+            AccessEvent.risk_level,
+            AccessEvent.is_anomaly_ground_truth,
+            AccessEvent.anomaly_type_ground_truth,
+        )
+        .order_by(AccessEvent.timestamp.desc())
+        .limit(limit)
+        .all()
+    )
     rows = list(reversed(rows))
-    return pd.DataFrame([{
-        "event_id": r.event_id,
-        "access_point_id": r.access_point_id,
-        "employee_id": r.employee_id,
-        "timestamp": r.timestamp,
-        "access_granted": r.access_granted,
-        "risk_level": r.risk_level,
-        "is_anomaly_ground_truth": r.is_anomaly_ground_truth,
-        "anomaly_type_ground_truth": r.anomaly_type_ground_truth,
-    } for r in rows])
+    if not rows:
+        return pd.DataFrame(columns=[
+            "event_id", "access_point_id", "employee_id", "timestamp",
+            "access_granted", "risk_level", "is_anomaly_ground_truth",
+            "anomaly_type_ground_truth",
+        ])
+    return pd.DataFrame(rows, columns=[
+        "event_id", "access_point_id", "employee_id", "timestamp",
+        "access_granted", "risk_level", "is_anomaly_ground_truth",
+        "anomaly_type_ground_truth",
+    ])
 
 
 def get_first_visit_timestamps(db: Session) -> dict:

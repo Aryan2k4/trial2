@@ -20,6 +20,14 @@ from app.services import occupancy_service
 from app.utils.occupancy_analytics import zone_status, building_summary, heatmap_data, overcrowding_alerts
 
 
+import time
+import threading
+
+_occupancy_cache = {}
+_occupancy_lock = threading.Lock()
+CACHE_TTL = 30.0
+
+
 class OccupancyAgent:
     def __init__(self, db: Session, building_id: str = "BLD-HQ-01"):
         self.db = db
@@ -27,10 +35,17 @@ class OccupancyAgent:
         self.zones = occupancy_service.list_zones(db, building_id)
 
     def analyze(self) -> dict:
+        now = time.time()
+        with _occupancy_lock:
+            if self.building_id in _occupancy_cache:
+                entry = _occupancy_cache[self.building_id]
+                if now - entry["timestamp"] < CACHE_TTL:
+                    return entry["data"]
+
         scored = []
         readings_by_id = {}
         for zone in self.zones:
-            readings = occupancy_service.get_readings_df(self.db, zone.zone_id, limit=2000)
+            readings = occupancy_service.get_readings_df(self.db, zone.zone_id, limit=500)
             readings_by_id[zone.zone_id] = readings
             meta = {
                 "zone_id": zone.zone_id, "name": zone.name,
@@ -38,11 +53,14 @@ class OccupancyAgent:
             }
             scored.append(zone_status(meta, readings))
 
-        return {
+        data = {
             "zones": scored,
             "building": building_summary(scored),
             "heatmap": heatmap_data(readings_by_id),
         }
+        with _occupancy_lock:
+            _occupancy_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+        return data
 
     def recommend(self, analysis: dict | None = None) -> list[dict]:
         analysis = analysis or self.analyze()

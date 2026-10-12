@@ -129,27 +129,36 @@ def ingest_from_csv(db: Session, csv_path=None) -> int:
     return len(records)
 
 
-def get_readings_df(db: Session, building_id: str) -> pd.DataFrame:
-    """Pull readings for a building back out as a DataFrame for analytics."""
+def get_readings_df(db: Session, building_id: str, limit: int | None = None) -> pd.DataFrame:
+    """Pull readings for a building back out as a DataFrame for analytics.
+    Uses column projection and limits to recent window to avoid downloading
+    tens of thousands of rows over remote network connections."""
     q = (
-        db.query(EnergyReading)
+        db.query(
+            EnergyReading.timestamp,
+            EnergyReading.total_kwh,
+            EnergyReading.hvac_kwh,
+            EnergyReading.lighting_kwh,
+            EnergyReading.plug_load_kwh,
+            EnergyReading.other_kwh,
+            EnergyReading.outdoor_temp_c,
+            EnergyReading.occupancy_count,
+        )
         .filter(EnergyReading.building_id == building_id)
-        .order_by(EnergyReading.timestamp)
+        .order_by(EnergyReading.timestamp.desc())
     )
-    rows = [
-        {
-            "timestamp": r.timestamp,
-            "total_kwh": r.total_kwh,
-            "hvac_kwh": r.hvac_kwh,
-            "lighting_kwh": r.lighting_kwh,
-            "plug_load_kwh": r.plug_load_kwh,
-            "other_kwh": r.other_kwh,
-            "outdoor_temp_c": r.outdoor_temp_c,
-            "occupancy_count": r.occupancy_count,
-        }
-        for r in q.all()
-    ]
-    return pd.DataFrame(rows)
+    fetch_limit = limit or 2000
+    rows = q.limit(fetch_limit).all()
+    rows = list(reversed(rows))
+    if not rows:
+        return pd.DataFrame(columns=[
+            "timestamp", "total_kwh", "hvac_kwh", "lighting_kwh", "plug_load_kwh",
+            "other_kwh", "outdoor_temp_c", "occupancy_count"
+        ])
+    return pd.DataFrame(rows, columns=[
+        "timestamp", "total_kwh", "hvac_kwh", "lighting_kwh", "plug_load_kwh",
+        "other_kwh", "outdoor_temp_c", "occupancy_count"
+    ])
 
 
 def has_data(db: Session, building_id: str) -> bool:

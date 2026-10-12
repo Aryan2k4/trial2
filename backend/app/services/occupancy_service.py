@@ -76,18 +76,16 @@ def get_zone(db: Session, zone_id: str) -> Zone | None:
 
 def get_readings_df(db: Session, zone_id: str, limit: int = 500) -> pd.DataFrame:
     rows = (
-        db.query(ZoneReading)
+        db.query(ZoneReading.timestamp, ZoneReading.headcount, ZoneReading.utilization_pct)
         .filter(ZoneReading.zone_id == zone_id)
         .order_by(ZoneReading.timestamp.desc())
         .limit(limit)
         .all()
     )
     rows = list(reversed(rows))
-    return pd.DataFrame([{
-        "timestamp": r.timestamp,
-        "headcount": r.headcount,
-        "utilization_pct": r.utilization_pct,
-    } for r in rows])
+    if not rows:
+        return pd.DataFrame(columns=["timestamp", "headcount", "utilization_pct"])
+    return pd.DataFrame(rows, columns=["timestamp", "headcount", "utilization_pct"])
 
 
 def get_latest_readings_df(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> pd.DataFrame:
