@@ -145,15 +145,15 @@ app.include_router(system_router, prefix=settings.API_V1_PREFIX)
 app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
 
 
-@app.get("/health")
-def health():
-    return {"status": "healthy"}
-
-
 # Locate production frontend static build (for single-link unified deployment)
+base_backend = Path(__file__).resolve().parent.parent
+
 static_candidates = [
-    Path(__file__).resolve().parent.parent / "static",                   # backend/static
-    Path(__file__).resolve().parent.parent.parent / "frontend" / "dist",  # frontend/dist
+    base_backend / "static",                                # backend/static
+    base_backend.parent / "static",                         # repo_root/static
+    base_backend.parent / "frontend" / "dist",              # frontend/dist
+    Path("static").resolve(),
+    Path("backend/static").resolve(),
     Path("/app/static"),
     Path("/app/backend/static"),
 ]
@@ -163,6 +163,17 @@ for candidate in static_candidates:
     if candidate.exists() and (candidate / "index.html").exists():
         frontend_dir = candidate
         break
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "frontend_mounted": frontend_dir is not None,
+        "frontend_dir": str(frontend_dir) if frontend_dir else None,
+        "deploy_version": "v2_fullstack"
+    }
+
 
 if frontend_dir:
     logger.info(f"Serving frontend from {frontend_dir}")

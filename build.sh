@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-echo "=== Building Frontend ==="
-cd frontend
-npm install
-npm run build
-cd ..
-
-echo "=== Syncing Frontend Build to Backend Static ==="
-mkdir -p backend/static
-cp -r frontend/dist/* backend/static/
-
-echo "=== Installing Backend Dependencies ==="
-pip install -r backend/requirements.txt
+echo "=== Installing Python Dependencies ==="
+if [ -f "requirements.txt" ]; then
+    pip install -r requirements.txt
+elif [ -f "backend/requirements.txt" ]; then
+    pip install -r backend/requirements.txt
+fi
 
 echo "=== Build Complete ==="
