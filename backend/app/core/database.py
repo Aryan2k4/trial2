@@ -43,6 +43,10 @@ def get_db():
 
 
 def init_db():
+    import time
+    import logging
+    log = logging.getLogger(__name__)
+
     # Import models so they're registered on Base before create_all
     from app.models import energy_models  # noqa
     from app.models import maintenance_models  # noqa
@@ -51,4 +55,15 @@ def init_db():
     from app.models import cost_models  # noqa
     from app.models import auth_models  # noqa
     from app.models import agent_memory_models  # noqa
-    Base.metadata.create_all(bind=engine)
+
+    max_retries = 5
+    for attempt in range(1, max_retries + 1):
+        try:
+            Base.metadata.create_all(bind=engine)
+            break
+        except Exception as e:
+            if attempt == max_retries:
+                log.error(f"Failed to initialize database tables after {max_retries} attempts: {e}")
+                raise
+            log.warning(f"Database connection attempt {attempt} failed ({e}), retrying in 2s...")
+            time.sleep(2)

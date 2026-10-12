@@ -96,43 +96,76 @@ def get_asset(db: Session, asset_id: str) -> Asset | None:
 
 def get_readings_df(db: Session, asset_id: str) -> pd.DataFrame:
     rows = (
-        db.query(AssetReading)
+        db.query(
+            AssetReading.cycle,
+            AssetReading.timestamp,
+            AssetReading.temp_stage1_c,
+            AssetReading.temp_stage2_c,
+            AssetReading.temp_stage3_c,
+            AssetReading.pressure_kpa,
+            AssetReading.vibration_index,
+            AssetReading.flow_rate,
+            AssetReading.efficiency_ratio,
+            AssetReading.bleed_load,
+        )
         .filter(AssetReading.asset_id == asset_id)
         .order_by(AssetReading.cycle)
         .all()
     )
-    return pd.DataFrame([{
-        "cycle": r.cycle,
-        "timestamp": r.timestamp,
-        "temp_stage1_c": r.temp_stage1_c,
-        "temp_stage2_c": r.temp_stage2_c,
-        "temp_stage3_c": r.temp_stage3_c,
-        "pressure_kpa": r.pressure_kpa,
-        "vibration_index": r.vibration_index,
-        "flow_rate": r.flow_rate,
-        "efficiency_ratio": r.efficiency_ratio,
-        "bleed_load": r.bleed_load,
-    } for r in rows])
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows, columns=[
+        "cycle", "timestamp", "temp_stage1_c", "temp_stage2_c", "temp_stage3_c",
+        "pressure_kpa", "vibration_index", "flow_rate", "efficiency_ratio", "bleed_load",
+    ])
+
+
+def get_all_readings_df(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> pd.DataFrame:
+    """Fetches all readings for every asset in the building in a SINGLE database query,
+    avoiding the N+1 latency penalty over remote connections."""
+    assets = list_assets(db, building_id)
+    if not assets:
+        return pd.DataFrame()
+    asset_ids = [a.asset_id for a in assets]
+    rows = (
+        db.query(
+            AssetReading.asset_id,
+            AssetReading.cycle,
+            AssetReading.timestamp,
+            AssetReading.temp_stage1_c,
+            AssetReading.temp_stage2_c,
+            AssetReading.temp_stage3_c,
+            AssetReading.pressure_kpa,
+            AssetReading.vibration_index,
+            AssetReading.flow_rate,
+            AssetReading.efficiency_ratio,
+            AssetReading.bleed_load,
+        )
+        .filter(AssetReading.asset_id.in_(asset_ids))
+        .order_by(AssetReading.asset_id, AssetReading.cycle)
+        .all()
+    )
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows, columns=[
+        "asset_id", "cycle", "timestamp", "temp_stage1_c", "temp_stage2_c",
+        "temp_stage3_c", "pressure_kpa", "vibration_index", "flow_rate",
+        "efficiency_ratio", "bleed_load",
+    ])
 
 
 def get_latest_readings_df(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> pd.DataFrame:
-    """One row per asset — its most recent reading. This is what 'current
-    fleet state' means for the dashboard/analytics."""
-    assets = list_assets(db, building_id)
-    frames = []
-    for a in assets:
-        df = get_readings_df(db, a.asset_id)
-        if df.empty:
-            continue
-        latest = df.iloc[[-1]].copy()
-        latest["asset_id"] = a.asset_id
-        latest["name"] = a.name
-        latest["asset_type"] = a.asset_type
-        latest["location"] = a.location
-        frames.append(latest)
-    if not frames:
+    """One row per asset — its most recent reading. Sourced from the single
+    bulk query above rather than looping over individual assets."""
+    all_df = get_all_readings_df(db, building_id)
+    if all_df.empty:
         return pd.DataFrame()
-    return pd.concat(frames, ignore_index=True)
+    assets = {a.asset_id: a for a in list_assets(db, building_id)}
+    latest = all_df.sort_values("cycle").groupby("asset_id").last().reset_index()
+    latest["name"] = latest["asset_id"].map(lambda aid: getattr(assets.get(aid), "name", aid))
+    latest["asset_type"] = latest["asset_id"].map(lambda aid: getattr(assets.get(aid), "asset_type", ""))
+    latest["location"] = latest["asset_id"].map(lambda aid: getattr(assets.get(aid), "location", ""))
+    return latest
 
 
 # ---- Work orders (the real cross-agent handoff target) ---------------

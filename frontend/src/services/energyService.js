@@ -2,9 +2,9 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
 
-// timeout: 60s safety net — generous window for local ML calculations, preventing
-// premature connection timeouts on local machines.
-const api = axios.create({ baseURL: API_BASE_URL, timeout: 60000 })
+// timeout: 120s safety net — generous window for cloud latency and ML calculations,
+// preventing premature connection timeouts on slow network connections.
+const api = axios.create({ baseURL: API_BASE_URL, timeout: 120000 })
 
 // Attach the stored JWT (if any) to every request this shared instance
 // makes — read fresh from localStorage per-request rather than captured

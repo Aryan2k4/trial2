@@ -53,36 +53,42 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
 
-    # Auto-ingest on first boot so the dashboard has data immediately in dev.
-    db = SessionLocal()
-    try:
-        if not data_service.has_data(db, "BLD-HQ-01"):
-            try:
-                data_service.ingest_from_csv(db)
-            except FileNotFoundError:
-                pass  # dataset not built yet; POST /api/energy/ingest once it is
-        if not maintenance_service.has_data(db, "BLD-HQ-01"):
-            try:
-                maintenance_service.ingest_fleet(db)
-            except FileNotFoundError:
-                pass  # dataset not built yet; POST /api/maintenance/ingest once it is
-        if not occupancy_service.has_data(db, "BLD-HQ-01"):
-            try:
-                occupancy_service.ingest_zones(db)
-            except FileNotFoundError:
-                pass  # dataset not built yet; POST /api/occupancy/ingest once it is
-        if not security_service.has_data(db, "BLD-HQ-01"):
-            try:
-                security_service.ingest_events(db)
-            except FileNotFoundError:
-                pass  # dataset not built yet; POST /api/security/ingest once it is
-        if not cost_service.has_data(db, "BLD-HQ-01"):
-            try:
-                cost_service.ingest_records(db)
-            except FileNotFoundError:
-                pass  # dataset not built yet; POST /api/cost/ingest once it is
-    finally:
-        db.close()
+    # Auto-ingest in a background thread so port 8000 binds and health checks pass immediately on Render boot
+    def _run_background_ingest():
+        db = SessionLocal()
+        try:
+            if not data_service.has_data(db, "BLD-HQ-01"):
+                try:
+                    data_service.ingest_from_csv(db)
+                except FileNotFoundError:
+                    pass
+            if not maintenance_service.has_data(db, "BLD-HQ-01"):
+                try:
+                    maintenance_service.ingest_fleet(db)
+                except FileNotFoundError:
+                    pass
+            if not occupancy_service.has_data(db, "BLD-HQ-01"):
+                try:
+                    occupancy_service.ingest_zones(db)
+                except FileNotFoundError:
+                    pass
+            if not security_service.has_data(db, "BLD-HQ-01"):
+                try:
+                    security_service.ingest_events(db)
+                except FileNotFoundError:
+                    pass
+            if not cost_service.has_data(db, "BLD-HQ-01"):
+                try:
+                    cost_service.ingest_records(db)
+                except FileNotFoundError:
+                    pass
+        except Exception as e:
+            logger.warning(f"Background auto-ingest encountered error (non-fatal): {e}")
+        finally:
+            db.close()
+
+    import asyncio
+    asyncio.get_running_loop().run_in_executor(None, _run_background_ingest)
 
     # Pre-warm the maintenance ML models (Keras LSTM + sklearn trees) at
     # server boot, not on the first real dashboard request. Loading is

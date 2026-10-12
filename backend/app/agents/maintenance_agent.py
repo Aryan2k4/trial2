@@ -6,10 +6,29 @@ needs, analyze() runs domain-specific analytics (here: per-asset ML health scori
 fleet rollups), recommend() turns that into ranked, actionable alerts (rule-based
 AND ML-driven), and run() is the single entrypoint the API/other agents call.
 """
+import time
+import threading
 from sqlalchemy.orm import Session
 
 from app.services import maintenance_service
 from app.utils.maintenance_analytics import score_fleet, fleet_summary, risk_ranking
+
+_agent_cache = {}
+_agent_locks = {}
+_locks_lock = threading.Lock()
+CACHE_TTL = 30.0
+
+
+def _get_lock(building_id: str):
+    with _locks_lock:
+        if building_id not in _agent_locks:
+            _agent_locks[building_id] = threading.Lock()
+        return _agent_locks[building_id]
+
+
+def clear_maintenance_agent_cache():
+    with _locks_lock:
+        _agent_cache.clear()
 
 
 class MaintenanceAgent:
@@ -20,23 +39,49 @@ class MaintenanceAgent:
 
     # ---- Analysis -------------------------------------------------
     def analyze(self) -> dict:
-        metas, readings_list = [], []
-        for asset in self.assets:
-            readings = maintenance_service.get_readings_df(self.db, asset.asset_id)
-            if readings.empty:
-                continue
-            metas.append({
-                "asset_id": asset.asset_id, "name": asset.name,
-                "asset_type": asset.asset_type, "location": asset.location,
-            })
-            readings_list.append(readings)
-        scored = score_fleet(metas, readings_list)
+        now = time.time()
+        lock = _get_lock(self.building_id)
+        with lock:
+            if self.building_id in _agent_cache:
+                entry = _agent_cache[self.building_id]
+                if now - entry["timestamp"] < CACHE_TTL:
+                    return entry["data"]
 
-        return {
-            "assets": scored,
-            "fleet": fleet_summary(scored),
-            "risk_ranking": risk_ranking(scored, limit=10),
-        }
+            if not self.assets:
+                empty = {"assets": [], "fleet": fleet_summary([]), "risk_ranking": []}
+                _agent_cache[self.building_id] = {"timestamp": time.time(), "data": empty}
+                return empty
+
+            all_readings = maintenance_service.get_all_readings_df(self.db, self.building_id)
+            if all_readings.empty:
+                empty = {"assets": [], "fleet": fleet_summary([]), "risk_ranking": []}
+                _agent_cache[self.building_id] = {"timestamp": time.time(), "data": empty}
+                return empty
+
+            # Group all readings by asset_id in memory (instantaneous)
+            grouped = {
+                aid: grp.drop(columns=["asset_id"]).reset_index(drop=True)
+                for aid, grp in all_readings.groupby("asset_id")
+            }
+            metas, readings_list = [], []
+            for asset in self.assets:
+                readings = grouped.get(asset.asset_id)
+                if readings is None or readings.empty:
+                    continue
+                metas.append({
+                    "asset_id": asset.asset_id, "name": asset.name,
+                    "asset_type": asset.asset_type, "location": asset.location,
+                })
+                readings_list.append(readings)
+
+            scored = score_fleet(metas, readings_list)
+            data = {
+                "assets": scored,
+                "fleet": fleet_summary(scored),
+                "risk_ranking": risk_ranking(scored, limit=10),
+            }
+            _agent_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+            return data
 
     # ---- Recommendations -------------------------------------------
     def recommend(self, analysis: dict | None = None) -> list[dict]:

@@ -134,36 +134,43 @@ import time
 import threading
 
 _agent_analyses_cache = {}
-_cache_lock = threading.Lock()
+_analyses_locks = {}
+_analyses_lock = threading.Lock()
 CACHE_TTL_SECONDS = 30.0
+
+
+def _get_analysis_lock(building_id: str):
+    with _analyses_lock:
+        if building_id not in _analyses_locks:
+            _analyses_locks[building_id] = threading.Lock()
+        return _analyses_locks[building_id]
 
 
 def _get_agent_analyses(db: Session, building_id: str, force_refresh: bool = False):
     now = time.time()
-    with _cache_lock:
+    lock = _get_analysis_lock(building_id)
+    with lock:
         if not force_refresh and building_id in _agent_analyses_cache:
             entry = _agent_analyses_cache[building_id]
             if now - entry["timestamp"] < CACHE_TTL_SECONDS:
                 return entry["data"]
 
-    energy, energy_err = _safe_analyze("energy", lambda: EnergyAgent(db, building_id).analyze())
-    maintenance, maintenance_err = _safe_analyze("maintenance", lambda: MaintenanceAgent(db, building_id).analyze())
-    occupancy, occupancy_err = _safe_analyze("occupancy", lambda: OccupancyAgent(db, building_id).analyze())
-    security, security_err = _safe_analyze("security", lambda: SecurityAgent(db, building_id).analyze())
-    cost, cost_err = _safe_analyze("cost", lambda: CostAgent(db, building_id).analyze())
+        energy, energy_err = _safe_analyze("energy", lambda: EnergyAgent(db, building_id).analyze())
+        maintenance, maintenance_err = _safe_analyze("maintenance", lambda: MaintenanceAgent(db, building_id).analyze())
+        occupancy, occupancy_err = _safe_analyze("occupancy", lambda: OccupancyAgent(db, building_id).analyze())
+        security, security_err = _safe_analyze("security", lambda: SecurityAgent(db, building_id).analyze())
+        cost, cost_err = _safe_analyze("cost", lambda: CostAgent(db, building_id).analyze())
 
-    data = {
-        "energy": energy, "energy_err": energy_err,
-        "maintenance": maintenance, "maintenance_err": maintenance_err,
-        "occupancy": occupancy, "occupancy_err": occupancy_err,
-        "security": security, "security_err": security_err,
-        "cost": cost, "cost_err": cost_err,
-    }
+        data = {
+            "energy": energy, "energy_err": energy_err,
+            "maintenance": maintenance, "maintenance_err": maintenance_err,
+            "occupancy": occupancy, "occupancy_err": occupancy_err,
+            "security": security, "security_err": security_err,
+            "cost": cost, "cost_err": cost_err,
+        }
 
-    with _cache_lock:
         _agent_analyses_cache[building_id] = {"timestamp": time.time(), "data": data}
-
-    return data
+        return data
 
 
 @router.get("/health")

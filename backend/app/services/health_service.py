@@ -8,6 +8,8 @@ held-out accuracy rather than presenting every prediction as equally
 trustworthy.
 """
 import json
+import logging
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -17,6 +19,8 @@ import pandas as pd
 
 from app.utils.rul_features import add_engineered_features, top_contributing_factors, SENSOR_COLS
 from app.utils.drift_detection import compute_drift
+
+logger = logging.getLogger(__name__)
 
 MODEL_DIR = Path(__file__).resolve().parents[2] / "ml_models" / "maintenance"
 MODEL_PATH = MODEL_DIR / "health_rul_model.pkl"
@@ -53,18 +57,30 @@ def is_model_available() -> bool:
     return MODEL_PATH.exists()
 
 
+def _get_metrics() -> dict:
+    if "metrics" not in _cache:
+        if not METRICS_PATH.exists():
+            return {}
+        try:
+            _cache["metrics"] = json.loads(METRICS_PATH.read_text())
+        except Exception as e:
+            logger.warning(f"Failed to read model metrics: {e}")
+            return {}
+    return _cache["metrics"]
+
+
 def _get_live_model_name() -> str:
     """Which model actually makes the point RUL prediction. Defaults to
     the tree ensemble if model_metrics.json has no `live_model` key yet
     (e.g. an older training run, or the LSTM script hasn't been run) —
     old behavior is preserved rather than silently requiring a retrain."""
-    if not METRICS_PATH.exists():
-        return "ensemble_blend"
-    metrics = json.loads(METRICS_PATH.read_text())
+    metrics = _get_metrics()
     return metrics.get("live_model") or metrics.get("best_model", "ensemble_blend")
 
 
 def is_lstm_live() -> bool:
+    if os.getenv("ENABLE_TENSORFLOW", "true").lower() not in {"1", "true", "yes"}:
+        return False
     if _get_live_model_name() != "lstm_deep_learning":
         return False
     if not (LSTM_MODEL_PATH.exists() and LSTM_SCALER_PATH.exists()):
@@ -123,9 +139,9 @@ def get_data_drift(asset_df: pd.DataFrame) -> dict:
     since a single mislabeled/wrong-unit sensor reading on one asset is
     exactly the kind of thing this should catch, and averaging across the
     whole fleet first would dilute it away."""
-    if not METRICS_PATH.exists():
+    metrics = _get_metrics()
+    if not metrics:
         return {"available": False}
-    metrics = json.loads(METRICS_PATH.read_text())
     training_dist = metrics.get("training_distribution")
     if not training_dist:
         return {"available": False}
@@ -137,20 +153,24 @@ def get_data_drift(asset_df: pd.DataFrame) -> dict:
 
 
 def get_confidence() -> dict:
-    if not METRICS_PATH.exists():
+    metrics = _get_metrics()
+    if not metrics:
         return {"available": False}
-    metrics = json.loads(METRICS_PATH.read_text())
     live_model = _get_live_model_name()
-    model_data = metrics["all_models"].get(live_model, metrics["all_models"][metrics["best_model"]])
+    if not is_lstm_live() and live_model == "lstm_deep_learning":
+        live_model = metrics.get("best_model", "ensemble_blend")
+    all_models = metrics.get("all_models", {})
+    fallback_model = metrics.get("best_model", "ensemble_blend")
+    model_data = all_models.get(live_model, all_models.get(fallback_model, {}))
 
     # improvement_over_naive_pct in the file was computed against the
     # ORIGINAL (tree-model) comparison set — recompute it honestly for
     # whichever model is actually live, using that model's own MAE against
     # the same naive baseline, rather than reusing a number that may not
     # belong to this model.
-    naive_mae = metrics["naive_baseline"]["mae_cycles"] if isinstance(metrics.get("naive_baseline"), dict) else metrics.get("naive_baseline")
-    model_mae = model_data["held_out_test_mae_cycles"]
-    improvement = round((1 - model_mae / naive_mae) * 100, 1) if naive_mae else metrics.get("improvement_over_naive_pct", 0)
+    naive_mae = metrics.get("naive_baseline", {}).get("mae_cycles") if isinstance(metrics.get("naive_baseline"), dict) else metrics.get("naive_baseline")
+    model_mae = model_data.get("held_out_test_mae_cycles", 0)
+    improvement = round((1 - model_mae / naive_mae) * 100, 1) if (naive_mae and model_mae) else metrics.get("improvement_over_naive_pct", 0)
 
     if improvement >= 40:
         confidence = "high"
@@ -162,8 +182,8 @@ def get_confidence() -> dict:
         "available": True,
         "model_used": live_model,
         "is_deep_learning": live_model == "lstm_deep_learning",
-        "mae_cycles": model_data["held_out_test_mae_cycles"],
-        "r2": model_data["held_out_test_r2"],
+        "mae_cycles": model_data.get("held_out_test_mae_cycles"),
+        "r2": model_data.get("held_out_test_r2"),
         "improvement_over_naive_pct": improvement,
         "confidence": confidence,
     }
@@ -188,25 +208,12 @@ def _impute_missing_sensors(asset_df: pd.DataFrame) -> tuple[pd.DataFrame, list[
     dataframe plus which columns were actually imputed, so the caller can
     disclose it rather than silently pretending every sensor was really
     reported.
-
-    Why this exists: a real bug was found where an upload missing optional
-    sensor columns (e.g. a technician who only has a vibration logger,
-    just uploading vibration_index) crashed predict_asset_health() with a
-    500 error — NaN sensor values propagated all the way to JSON
-    serialization. Both the tree model and the LSTM need EVERY sensor
-    column to produce a prediction at all; rejecting the upload outright
-    would be the "safe" choice but defeats the point of accepting
-    whatever CSV someone actually has. Imputing with the training mean is
-    a reasonable middle ground — it's what a "no signal" prior looks like
-    for that sensor — combined with clearly flagging it in the response
-    (see predict_asset_health's `imputed_sensors` field) instead of
-    silently pretending the value was real.
     """
     df = asset_df.copy()
     imputed = []
-    if not METRICS_PATH.exists():
+    metrics = _get_metrics()
+    if not metrics:
         return df, imputed
-    metrics = json.loads(METRICS_PATH.read_text())
     training_dist = metrics.get("training_distribution", {})
     for col in SENSOR_COLS:
         if col not in df.columns:

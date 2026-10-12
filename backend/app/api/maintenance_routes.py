@@ -11,7 +11,7 @@ from app.models.auth_models import User
 from app.core.intelligence_engine import investigate_maintenance, investigate_maintenance_stream
 from app.utils.sse import sse_stream_response
 from app.services import maintenance_service
-from app.agents.maintenance_agent import MaintenanceAgent
+from app.agents.maintenance_agent import MaintenanceAgent, clear_maintenance_agent_cache
 from app.models.maintenance_models import AssetReading, Asset
 from app.utils.csv_upload import read_any, resolve_columns, save_upload_tmp
 
@@ -27,6 +27,7 @@ def ingest(db: Session = Depends(get_db)):
     for the real NASA C-MAPSS source and honest domain-relabeling caveat."""
     try:
         result = maintenance_service.ingest_fleet(db)
+        clear_maintenance_agent_cache()
     except FileNotFoundError as e:
         raise HTTPException(503, str(e))
     return {"status": "ok", "building_id": DEFAULT_BUILDING, **result}
@@ -219,6 +220,7 @@ async def ingest_upload(
             ))
         db.bulk_save_objects(rows)
         db.commit()
+        clear_maintenance_agent_cache()
         return {"status": "ok", "rows_ingested": len(rows), "assets_affected": sorted(out["asset_id"].unique().tolist())}
     except ValueError as e:
         raise HTTPException(400, str(e))
@@ -272,6 +274,7 @@ def add_record(payload: AssetReadingIn, db: Session = Depends(get_db), current_u
     db.add(row)
     db.commit()
     db.refresh(row)
+    clear_maintenance_agent_cache()
     return {"status": "ok", "id": row.id}
 
 
@@ -283,6 +286,7 @@ def delete_record(record_id: int, db: Session = Depends(get_db), current_user: U
         raise HTTPException(404, "Reading not found")
     db.delete(row)
     db.commit()
+    clear_maintenance_agent_cache()
     return {"status": "ok", "deleted_id": record_id}
 
 
@@ -296,4 +300,5 @@ def clear_all_records(asset_id: str | None = Query(None), db: Session = Depends(
         q = q.filter(AssetReading.asset_id == asset_id)
     deleted = q.delete()
     db.commit()
+    clear_maintenance_agent_cache()
     return {"status": "ok", "deleted_count": deleted}

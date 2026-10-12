@@ -62,15 +62,9 @@ MEDIATOR_SYSTEM_PROMPT = (
 
 
 def _get_at_risk_assets(db: Session, building_id: str, max_health_score: float = 40.0, limit: int = 5) -> list[dict]:
-    assets = maintenance_service.list_assets(db, building_id)
-    metas, readings_list = [], []
-    for a in assets:
-        readings = maintenance_service.get_readings_df(db, a.asset_id)
-        if readings.empty:
-            continue
-        metas.append({"asset_id": a.asset_id, "name": a.name, "asset_type": a.asset_type, "location": a.location})
-        readings_list.append(readings)
-    scored = score_fleet(metas, readings_list)
+    from app.agents.maintenance_agent import MaintenanceAgent
+    analysis = MaintenanceAgent(db, building_id).analyze()
+    scored = analysis.get("assets", [])
     at_risk = [a for a in scored if a["health_score"] <= max_health_score and a["status"] in ("Critical", "Warning")]
     at_risk.sort(key=lambda a: a["health_score"])
     return at_risk[:limit]

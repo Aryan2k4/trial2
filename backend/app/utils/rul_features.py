@@ -79,13 +79,22 @@ def add_engineered_features(df: pd.DataFrame, group_col: str) -> pd.DataFrame:
         instead of relying on it to discover the interaction itself.
     """
     df = df.sort_values([group_col, "cycle"]).reset_index(drop=True)
-    grouped = df.groupby(group_col)
-    for col in WINDOWED_COLS:
-        for w in WINDOW_SIZES:
-            df[f"{col}_roll_mean{w}"] = grouped[col].transform(lambda s, w=w: s.rolling(w, min_periods=1).mean())
-            df[f"{col}_roll_std{w}"] = grouped[col].transform(lambda s, w=w: s.rolling(w, min_periods=1).std().fillna(0))
-        df[f"{col}_ema5"] = grouped[col].transform(lambda s: s.ewm(span=5, min_periods=1).mean())
-        df[f"{col}_delta5"] = grouped[col].transform(lambda s: s - s.shift(5).fillna(s.iloc[0] if len(s) else 0))
+    if df[group_col].nunique() <= 1:
+        for col in WINDOWED_COLS:
+            s = df[col]
+            for w in WINDOW_SIZES:
+                df[f"{col}_roll_mean{w}"] = s.rolling(w, min_periods=1).mean()
+                df[f"{col}_roll_std{w}"] = s.rolling(w, min_periods=1).std().fillna(0)
+            df[f"{col}_ema5"] = s.ewm(span=5, min_periods=1).mean()
+            df[f"{col}_delta5"] = s - s.shift(5).fillna(s.iloc[0] if len(s) else 0)
+    else:
+        grouped = df.groupby(group_col)
+        for col in WINDOWED_COLS:
+            for w in WINDOW_SIZES:
+                df[f"{col}_roll_mean{w}"] = grouped[col].transform(lambda s, w=w: s.rolling(w, min_periods=1).mean())
+                df[f"{col}_roll_std{w}"] = grouped[col].transform(lambda s, w=w: s.rolling(w, min_periods=1).std().fillna(0))
+            df[f"{col}_ema5"] = grouped[col].transform(lambda s: s.ewm(span=5, min_periods=1).mean())
+            df[f"{col}_delta5"] = grouped[col].transform(lambda s: s - s.shift(5).fillna(s.iloc[0] if len(s) else 0))
 
     # Guard divide-by-zero on the (already-scaled, always-positive in this
     # dataset) efficiency_ratio.
