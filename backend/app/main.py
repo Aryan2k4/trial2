@@ -1,4 +1,5 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, Request
@@ -91,20 +92,27 @@ async def lifespan(app: FastAPI):
     # takes forever to open" cost users actually feel. Paying it here
     # means it happens while the server is starting up (invisible to the
     # user) instead of while they're staring at a loading spinner.
-    try:
-        import numpy as np
-        import pandas as pd
-        from app.services import health_service
-        dummy_df = pd.DataFrame({
-            "cycle": range(1, 6), "timestamp": [pd.Timestamp.now()] * 5,
-            "temp_stage1_c": np.zeros(5), "temp_stage2_c": np.zeros(5), "temp_stage3_c": np.zeros(5),
-            "pressure_kpa": np.zeros(5), "vibration_index": np.zeros(5), "flow_rate": np.zeros(5),
-            "efficiency_ratio": np.zeros(5), "bleed_load": np.zeros(5),
-        })
-        health_service.predict_fleet_health([dummy_df])  # loads+caches both models AND triggers the one-time TF graph trace now, not on the first real request
-        logger.info("Maintenance ML models pre-warmed at startup.")
-    except Exception as e:
-        logger.warning(f"Model pre-warm skipped (non-fatal): {e}")
+    # TensorFlow's model runtime exceeds the memory available on small/free
+    # hosting plans. Set ENABLE_TENSORFLOW=false there so the rest of the
+    # dashboard remains available; TensorFlow-specific endpoints already
+    # report that their live model is unavailable instead of failing startup.
+    if os.getenv("ENABLE_TENSORFLOW", "true").lower() not in {"1", "true", "yes"}:
+        logger.info("TensorFlow model pre-warm disabled by ENABLE_TENSORFLOW.")
+    else:
+        try:
+            import numpy as np
+            import pandas as pd
+            from app.services import health_service
+            dummy_df = pd.DataFrame({
+                "cycle": range(1, 6), "timestamp": [pd.Timestamp.now()] * 5,
+                "temp_stage1_c": np.zeros(5), "temp_stage2_c": np.zeros(5), "temp_stage3_c": np.zeros(5),
+                "pressure_kpa": np.zeros(5), "vibration_index": np.zeros(5), "flow_rate": np.zeros(5),
+                "efficiency_ratio": np.zeros(5), "bleed_load": np.zeros(5),
+            })
+            health_service.predict_fleet_health([dummy_df])  # loads+caches both models AND triggers the one-time TF graph trace now, not on the first real request
+            logger.info("Maintenance ML models pre-warmed at startup.")
+        except Exception as e:
+            logger.warning(f"Model pre-warm skipped (non-fatal): {e}")
 
     yield
 
