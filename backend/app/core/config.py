@@ -24,9 +24,14 @@ class Settings:
     # scheme. SQLAlchemy requires a dialect/driver-qualified URL, so accept
     # both Render's value and the normal local SQLite value without asking the
     # deployer to translate it manually.
-    DATABASE_URL: str = os.getenv(
+    _database_url = os.getenv(
         "DATABASE_URL", f"sqlite:///{BASE_DIR / 'data' / 'facilityops.db'}"
-    ).replace("postgres://", "postgresql+psycopg://", 1)
+    )
+    if _database_url.startswith("postgres://"):
+        _database_url = _database_url.replace("postgres://", "postgresql+psycopg://", 1)
+    elif _database_url.startswith("postgresql://"):
+        _database_url = _database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    DATABASE_URL: str = _database_url
 
     # Data ingestion source (Milestone 1: utility/IoT data integration).
     # Points at the processed CSV that stands in for a real utility/IoT feed.
