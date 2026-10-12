@@ -102,8 +102,9 @@ async def lifespan(app: FastAPI):
     # hosting plans. Set ENABLE_TENSORFLOW=false there so the rest of the
     # dashboard remains available; TensorFlow-specific endpoints already
     # report that their live model is unavailable instead of failing startup.
-    if os.getenv("ENABLE_TENSORFLOW", "true").lower() not in {"1", "true", "yes"}:
-        logger.info("TensorFlow model pre-warm disabled by ENABLE_TENSORFLOW.")
+    default_enable = "false" if os.getenv("RENDER") else "true"
+    if os.getenv("ENABLE_TENSORFLOW", default_enable).lower() not in {"1", "true", "yes"}:
+        logger.info("TensorFlow model pre-warm disabled by ENABLE_TENSORFLOW or RENDER platform.")
     else:
         try:
             import numpy as np

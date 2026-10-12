@@ -79,7 +79,8 @@ def _get_live_model_name() -> str:
 
 
 def is_lstm_live() -> bool:
-    if os.getenv("ENABLE_TENSORFLOW", "true").lower() not in {"1", "true", "yes"}:
+    default_enable = "false" if os.getenv("RENDER") else "true"
+    if os.getenv("ENABLE_TENSORFLOW", default_enable).lower() not in {"1", "true", "yes"}:
         return False
     if _get_live_model_name() != "lstm_deep_learning":
         return False
