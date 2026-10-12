@@ -136,7 +136,7 @@ import threading
 _agent_analyses_cache = {}
 _analyses_locks = {}
 _analyses_lock = threading.Lock()
-CACHE_TTL_SECONDS = 30.0
+CACHE_TTL_SECONDS = 300.0
 
 
 def _get_analysis_lock(building_id: str):

@@ -319,6 +319,11 @@ def predict_fleet_health(asset_dfs: list[pd.DataFrame]) -> list[dict]:
     else:
         rul_lowers = rul_uppers = [None] * len(prepped)
 
+    confidence = get_confidence()
+    feature_means = bundle.get("feature_means", {})
+    feature_stds = bundle.get("feature_stds", {})
+    feature_importances = bundle.get("feature_importances") or {}
+
     results = []
     for i, (asset_df, imputed_sensors, X) in enumerate(prepped):
         predicted_rul = float(predicted_ruls[i])
@@ -330,12 +335,12 @@ def predict_fleet_health(asset_dfs: list[pd.DataFrame]) -> list[dict]:
 
         factors = top_contributing_factors(
             X.iloc[0].to_dict(),
-            bundle.get("feature_means", {}),
-            bundle.get("feature_stds", {}),
-            bundle.get("feature_importances") or {},
+            feature_means,
+            feature_stds,
+            feature_importances,
         )
 
-        latest_row = asset_df.sort_values("cycle").iloc[-1]
+        latest_row = asset_df.iloc[-1]
         latest_timestamp = pd.to_datetime(latest_row["timestamp"])
         predicted_maintenance_date = latest_timestamp + timedelta(days=round(predicted_rul))
         maintenance_date_earliest = (
@@ -357,7 +362,7 @@ def predict_fleet_health(asset_dfs: list[pd.DataFrame]) -> list[dict]:
             "maintenance_date_earliest": maintenance_date_earliest,
             "maintenance_date_latest": maintenance_date_latest,
             "top_factors": factors,
-            "confidence": get_confidence(),
+            "confidence": confidence,
             "data_drift": get_data_drift(asset_df),
             "imputed_sensors": imputed_sensors,
         })

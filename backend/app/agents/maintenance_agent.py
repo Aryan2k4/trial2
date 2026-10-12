@@ -16,7 +16,7 @@ from app.utils.maintenance_analytics import score_fleet, fleet_summary, risk_ran
 _agent_cache = {}
 _agent_locks = {}
 _locks_lock = threading.Lock()
-CACHE_TTL = 30.0
+CACHE_TTL = 300.0
 
 
 def _get_lock(building_id: str):
