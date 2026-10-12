@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: facilityops-app
+    env: python
+    buildCommand: "npm --prefix frontend install && npm --prefix frontend run build && mkdir -p backend/static && cp -r frontend/dist/* backend/static/ && pip install -r backend/requirements.txt"
+    startCommand: "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: VITE_API_BASE_URL
+        value: /api
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: facilityops123

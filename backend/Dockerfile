@@ -37,4 +37,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=3 \
 # especially), so raising this without sizing container memory
 # accordingly will OOM — see README's Docker section before changing this
 # for a real multi-user deployment.
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

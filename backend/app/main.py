@@ -1,8 +1,10 @@
 import logging
+from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.database import init_db, SessionLocal
@@ -143,11 +145,49 @@ app.include_router(system_router, prefix=settings.API_V1_PREFIX)
 app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
 
 
-@app.get("/")
-def root():
-    return {"service": settings.PROJECT_NAME, "status": "running", "docs": "/docs"}
-
-
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+
+# Locate production frontend static build (for single-link unified deployment)
+static_candidates = [
+    Path(__file__).resolve().parent.parent / "static",                   # backend/static
+    Path(__file__).resolve().parent.parent.parent / "frontend" / "dist",  # frontend/dist
+    Path("/app/static"),
+    Path("/app/backend/static"),
+]
+
+frontend_dir = None
+for candidate in static_candidates:
+    if candidate.exists() and (candidate / "index.html").exists():
+        frontend_dir = candidate
+        break
+
+if frontend_dir:
+    logger.info(f"Serving frontend from {frontend_dir}")
+    assets_dir = frontend_dir / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend_assets")
+
+    @app.get("/")
+    def serve_root():
+        return FileResponse(frontend_dir / "index.html")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Do not intercept API, health, docs, or OpenAPI endpoints
+        if (
+            full_path.startswith("api")
+            or full_path == "api"
+            or full_path in ("health", "docs", "redoc", "openapi.json")
+        ):
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+        file_path = frontend_dir / full_path
+        if full_path and file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(frontend_dir / "index.html")
+else:
+    @app.get("/")
+    def root():
+        return {"service": settings.PROJECT_NAME, "status": "running", "docs": "/docs"}
