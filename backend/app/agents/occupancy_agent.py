@@ -14,6 +14,7 @@ Agent owns — so it hands off via security_service.open_alert(), the same
 real-row-in-a-shared-table pattern already established by the Energy ->
 Maintenance handoff.
 """
+import pandas as pd
 from sqlalchemy.orm import Session
 
 from app.services import occupancy_service
@@ -42,10 +43,12 @@ class OccupancyAgent:
                 if now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
+        all_readings = occupancy_service.get_all_zone_readings(self.db, self.building_id, limit_per_zone=500)
         scored = []
         readings_by_id = {}
+        empty_df = pd.DataFrame(columns=["timestamp", "headcount", "utilization_pct"])
         for zone in self.zones:
-            readings = occupancy_service.get_readings_df(self.db, zone.zone_id, limit=500)
+            readings = all_readings.get(zone.zone_id, empty_df)
             readings_by_id[zone.zone_id] = readings
             meta = {
                 "zone_id": zone.zone_id, "name": zone.name,

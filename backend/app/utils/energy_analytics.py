@@ -69,23 +69,33 @@ def detect_anomalies(df: pd.DataFrame) -> list[dict]:
 
     work = df.copy()
     work["hour"] = work["timestamp"].dt.hour
-    hourly_stats = work.groupby("hour")["total_kwh"].agg(["mean", "std"]).fillna(0)
+    hourly_mean = work.groupby("hour")["total_kwh"].transform("mean")
+    hourly_std = work.groupby("hour")["total_kwh"].transform("std").fillna(0)
+    std_safe = hourly_std.where(hourly_std > 0, 1e-6)
 
-    anomalies = []
-    for _, row in work.iterrows():
-        stats = hourly_stats.loc[row["hour"]]
-        std = stats["std"] if stats["std"] > 0 else 1e-6
-        z = (row["total_kwh"] - stats["mean"]) / std
-        if abs(z) >= settings.ANOMALY_ZSCORE_THRESHOLD:
-            severity = "high" if abs(z) >= settings.ANOMALY_ZSCORE_THRESHOLD * 1.4 else "medium"
-            anomalies.append({
-                "timestamp": row["timestamp"],
-                "total_kwh": round(row["total_kwh"], 2),
-                "expected_kwh": round(stats["mean"], 2),
-                "z_score": round(float(z), 2),
-                "severity": severity,
-            })
-    anomalies.sort(key=lambda a: abs(a["z_score"]), reverse=True)
+    work["expected_kwh"] = hourly_mean
+    work["z_score"] = (work["total_kwh"] - hourly_mean) / std_safe
+    work["abs_z"] = work["z_score"].abs()
+
+    threshold = settings.ANOMALY_ZSCORE_THRESHOLD
+    mask = work["abs_z"] >= threshold
+    anom_df = work.loc[mask]
+    if anom_df.empty:
+        return []
+
+    anom_df = anom_df.sort_values(by="abs_z", ascending=False)
+    high_threshold = threshold * 1.4
+
+    anomalies = [
+        {
+            "timestamp": row.timestamp,
+            "total_kwh": round(float(row.total_kwh), 2),
+            "expected_kwh": round(float(row.expected_kwh), 2),
+            "z_score": round(float(row.z_score), 2),
+            "severity": "high" if float(row.abs_z) >= high_threshold else "medium",
+        }
+        for row in anom_df.itertuples(index=False)
+    ]
     return anomalies
 
 

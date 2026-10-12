@@ -88,13 +88,38 @@ def get_readings_df(db: Session, zone_id: str, limit: int = 500) -> pd.DataFrame
     return pd.DataFrame(rows, columns=["timestamp", "headcount", "utilization_pct"])
 
 
+def get_all_zone_readings(db: Session, building_id: str = DEFAULT_BUILDING_ID, limit_per_zone: int = 500) -> dict[str, pd.DataFrame]:
+    """Fetch readings for all zones in a building in a single bulk query instead of N individual queries."""
+    zones = list_zones(db, building_id)
+    if not zones:
+        return {}
+    zone_ids = [z.zone_id for z in zones]
+    rows = (
+        db.query(ZoneReading.zone_id, ZoneReading.timestamp, ZoneReading.headcount, ZoneReading.utilization_pct)
+        .filter(ZoneReading.zone_id.in_(zone_ids))
+        .order_by(ZoneReading.timestamp.desc())
+        .limit(limit_per_zone * len(zone_ids))
+        .all()
+    )
+    result = {zid: pd.DataFrame(columns=["timestamp", "headcount", "utilization_pct"]) for zid in zone_ids}
+    if not rows:
+        return result
+    df = pd.DataFrame(rows, columns=["zone_id", "timestamp", "headcount", "utilization_pct"])
+    for zid, group in df.groupby("zone_id"):
+        result[str(zid)] = group.iloc[::-1].reset_index(drop=True)[["timestamp", "headcount", "utilization_pct"]]
+    return result
+
+
 def get_latest_readings_df(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> pd.DataFrame:
     """One row per zone — its most recent reading, joined with zone metadata."""
     zones = list_zones(db, building_id)
+    if not zones:
+        return pd.DataFrame()
+    all_readings = get_all_zone_readings(db, building_id, limit_per_zone=1)
     frames = []
     for z in zones:
-        df = get_readings_df(db, z.zone_id, limit=1)
-        if df.empty:
+        df = all_readings.get(z.zone_id)
+        if df is None or df.empty:
             continue
         latest = df.iloc[[-1]].copy()
         latest["zone_id"] = z.zone_id
@@ -105,3 +130,4 @@ def get_latest_readings_df(db: Session, building_id: str = DEFAULT_BUILDING_ID) 
     if not frames:
         return pd.DataFrame()
     return pd.concat(frames, ignore_index=True)
+

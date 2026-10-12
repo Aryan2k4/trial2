@@ -155,7 +155,7 @@ def _get_agent_analyses(db: Session, building_id: str, force_refresh: bool = Fal
             if now - entry["timestamp"] < CACHE_TTL_SECONDS:
                 return entry["data"]
 
-        energy, energy_err = _safe_analyze("energy", lambda: EnergyAgent(db, building_id).analyze())
+        energy, energy_err = _safe_analyze("energy", lambda: EnergyAgent(db, building_id, limit=672).analyze())
         maintenance, maintenance_err = _safe_analyze("maintenance", lambda: MaintenanceAgent(db, building_id).analyze())
         occupancy, occupancy_err = _safe_analyze("occupancy", lambda: OccupancyAgent(db, building_id).analyze())
         security, security_err = _safe_analyze("security", lambda: SecurityAgent(db, building_id).analyze())
