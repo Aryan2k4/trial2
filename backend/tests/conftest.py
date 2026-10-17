@@ -36,4 +36,3 @@ def pytest_collection_modifyitems(items):
 def pytest_sessionfinish(session, exitstatus):
     from app.core.database import engine
     engine.dispose()
-

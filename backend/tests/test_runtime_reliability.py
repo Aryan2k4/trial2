@@ -106,4 +106,3 @@ def test_default_security_window_excludes_other_buildings():
         db.commit()
         frame = get_recent_events_df(db)
         assert "OTHER-DOOR" not in frame["access_point_id"].tolist()
-
