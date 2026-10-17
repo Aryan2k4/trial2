@@ -21,7 +21,7 @@ router = APIRouter(prefix="/occupancy", tags=["occupancy"])
 DEFAULT_BUILDING = "BLD-HQ-01"
 
 
-@router.post("/ingest")
+@router.post("/ingest", dependencies=[Depends(require_role("admin", "technician"))])
 def ingest(db: Session = Depends(get_db)):
     """Milestone 3: integrate occupancy monitoring data. See
     data/build_occupancy_dataset.py for the real UCI Occupancy Detection
@@ -137,7 +137,7 @@ def alerts(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get
     return {"building_id": building_id, "alerts": agent.recommend()}
 
 
-@router.get("/investigate")
+@router.get("/investigate", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Genuinely agentic endpoint: the model decides which zones to
     inspect and whether a restricted zone's occupancy warrants a real
@@ -145,7 +145,7 @@ def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depend
     return investigate_occupancy(building_id, db=db)
 
 
-@router.get("/investigate/stream")
+@router.get("/investigate/stream", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate_stream(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Streamed (Server-Sent Events) version of /investigate — see
     app/api/routes.py's investigate_stream for the shared event shape."""
@@ -198,7 +198,7 @@ OCCUPANCY_ALIASES = {
 }
 
 
-@router.post("/ingest/upload")
+@router.post("/ingest/upload", dependencies=[Depends(require_role("admin", "technician"))])
 async def ingest_upload(
     file: UploadFile = File(...),
     replace: bool = Query(True, description="Clear existing readings before loading this file"),

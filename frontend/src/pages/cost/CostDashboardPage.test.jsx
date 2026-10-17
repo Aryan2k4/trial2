@@ -40,10 +40,7 @@ function renderPage() {
 }
 
 beforeEach(() => {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    body: { getReader: () => ({ read: () => Promise.resolve({ done: true, value: undefined }) }) },
-  })
+  global.fetch = vi.fn().mockImplementation(async () => new Response('data: {"type":"done","tool_calls":[],"final_text":"Investigation complete"}\n\n'))
 })
 
 describe('CostDashboardPage', () => {

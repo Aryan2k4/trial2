@@ -75,7 +75,7 @@ def list_access_points(db: Session, building_id: str = DEFAULT_BUILDING_ID) -> l
     return db.query(AccessPoint).filter(AccessPoint.building_id == building_id).all()
 
 
-def get_recent_events_df(db: Session, limit: int = 1500) -> pd.DataFrame:
+def get_recent_events_df(db: Session, limit: int = 1500, building_id: str = DEFAULT_BUILDING_ID) -> pd.DataFrame:
     rows = (
         db.query(
             AccessEvent.event_id,
@@ -87,6 +87,7 @@ def get_recent_events_df(db: Session, limit: int = 1500) -> pd.DataFrame:
             AccessEvent.is_anomaly_ground_truth,
             AccessEvent.anomaly_type_ground_truth,
         )
+        .filter(AccessEvent.access_point_id.in_(db.query(AccessPoint.access_point_id).filter(AccessPoint.building_id == building_id)))
         .order_by(AccessEvent.timestamp.desc())
         .limit(limit)
         .all()

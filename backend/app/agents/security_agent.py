@@ -1,3 +1,4 @@
+from app.core.cache_revision import current_revision
 """
 Security Agent (Milestone 3).
 
@@ -38,13 +39,14 @@ class SecurityAgent:
 
     def analyze(self) -> dict:
         now = time.time()
+        revision = current_revision()
         with _security_lock:
             if self.building_id in _security_cache:
                 entry = _security_cache[self.building_id]
-                if now - entry["timestamp"] < CACHE_TTL:
+                if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
-        events = security_service.get_recent_events_df(self.db, limit=1500)
+        events = security_service.get_recent_events_df(self.db, limit=1500, building_id=self.building_id)
         first_visit_map = security_service.get_first_visit_timestamps(self.db)
         scored = score_events(events, first_visit_map)
         ap_meta = [{"access_point_id": a.access_point_id, "name": a.name, "risk_level": a.risk_level} for a in self.access_points]
@@ -56,7 +58,7 @@ class SecurityAgent:
             "access_point_activity": access_point_activity(scored, ap_meta),
         }
         with _security_lock:
-            _security_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+            _security_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": data}
         return data
 
     def recommend(self, analysis: dict | None = None) -> list[dict]:

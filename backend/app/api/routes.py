@@ -27,7 +27,7 @@ MAX_WINDOW = 40000  # generous ceiling; actual dataset size may be less
 LimitQuery = Query(None, ge=1, le=MAX_WINDOW, description="Most-recent-N-readings window; omit for full dataset")
 
 
-@router.post("/ingest")
+@router.post("/ingest", dependencies=[Depends(require_role("admin", "technician"))])
 def ingest(db: Session = Depends(get_db)):
     """Milestone 1: integrate utility/IoT data. Loads the configured feed
     into the database. Swap the CSV source for a live connector in prod."""
@@ -40,7 +40,7 @@ def ingest(db: Session = Depends(get_db)):
     }
 
 
-@router.post("/ingest/upload")
+@router.post("/ingest/upload", dependencies=[Depends(require_role("admin", "technician"))])
 async def ingest_upload(file: UploadFile = File(...), db: Session = Depends(get_db)):
     """
     Upload a CSV or Excel (.xlsx) file and ingest it directly — e.g. a
@@ -208,7 +208,7 @@ def briefing(building_id: str = Query(DEFAULT_BUILDING), limit: int = LimitQuery
     }
 
 
-@router.get("/investigate")
+@router.get("/investigate", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """
     Genuinely agentic endpoint: the model is given tools (not pre-computed
@@ -229,7 +229,7 @@ def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depend
     return investigate_energy(building_id, db=db)
 
 
-@router.get("/investigate/stream")
+@router.get("/investigate/stream", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate_stream(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """
     Same investigation as /investigate, streamed as Server-Sent Events so

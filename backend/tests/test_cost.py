@@ -7,6 +7,8 @@ from app.main import app
 
 client = TestClient(app)
 client.__enter__()
+from app.core.security import create_access_token
+client.headers["Authorization"] = f"Bearer {create_access_token('admin')}"
 
 
 def test_cost_ingest():
@@ -92,7 +94,7 @@ def test_manual_record_add_and_delete():
 def test_manual_record_add_requires_auth():
     """/records is a protected admin action — no Bearer token should be
     rejected with 401, not silently allowed through."""
-    r = client.post("/api/cost/records", json={
+    r = TestClient(app).post("/api/cost/records", json={
         "vendor_name": "Unauthorized Vendor", "category": "Repairs & Maintenance", "amount_inr": 1.0,
     })
     assert r.status_code == 401

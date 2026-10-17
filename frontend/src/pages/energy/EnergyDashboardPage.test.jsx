@@ -41,10 +41,7 @@ function renderPage() {
 // the click handler without asserting on stream content here (that's
 // covered by AgentTraceViewer.test.jsx and useAgentStream's own behavior).
 beforeEach(() => {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    body: { getReader: () => ({ read: () => Promise.resolve({ done: true, value: undefined }) }) },
-  })
+  global.fetch = vi.fn().mockImplementation(async () => new Response('data: {"type":"done","tool_calls":[],"final_text":"Investigation complete"}\n\n'))
 })
 
 describe('EnergyDashboardPage', () => {
@@ -74,7 +71,7 @@ describe('EnergyDashboardPage', () => {
   it('shows a connection-failed message instead of crashing when the dashboard fetch fails', async () => {
     energyService.getDashboard.mockRejectedValue(new Error('ECONNREFUSED'))
     renderPage()
-    expect(await screen.findByText(/connection failed/)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /connection failed/i })).toBeInTheDocument()
   })
 
   it('renders the Ask the Energy Agent investigation panel and starts a stream on click', async () => {

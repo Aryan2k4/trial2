@@ -2,16 +2,12 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 from app.core.config import settings
+from app.core.cache_revision import advance_revision
 
 connect_args = {"check_same_thread": False, "timeout": 15} if settings.DATABASE_URL.startswith("sqlite") else {}
-# Default pool_size(5)+max_overflow(10)=15 concurrent connections is too
-# tight for this app's real usage pattern: 4 dashboards each polling every
-# 30s, plus manual investigate/add/delete calls layered on top, can burst
-# past 15 simultaneous DB-touching requests and start timing out with
-# "QueuePool limit ... reached" — which the browser also just sees as a
-# failed request. Widened generously since SQLite handles concurrent
-# readers fine under WAL (set below).
-engine = create_engine(settings.DATABASE_URL, connect_args=connect_args, pool_size=20, max_overflow=20, pool_timeout=30)
+# Bound connections for small hosted databases; recycle stale connections
+# after idle periods and validate them when checked out of the pool.
+engine = create_engine(settings.DATABASE_URL, connect_args=connect_args, pool_size=5, max_overflow=5, pool_timeout=30, pool_pre_ping=True, pool_recycle=300)
 
 if settings.DATABASE_URL.startswith("sqlite"):
     # SQLite's default journal mode serializes writers hard enough that
@@ -31,6 +27,7 @@ if settings.DATABASE_URL.startswith("sqlite"):
         cursor.close()
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+event.listen(SessionLocal, "after_commit", advance_revision)
 Base = declarative_base()
 
 
@@ -60,6 +57,10 @@ def init_db():
     for attempt in range(1, max_retries + 1):
         try:
             Base.metadata.create_all(bind=engine)
+            # create_all does not add a new index to an existing table.
+            for index in security_models.AccessEvent.__table__.indexes:
+                if index.name == "ix_sec_emp_ap_ts":
+                    index.create(bind=engine, checkfirst=True)
             break
         except Exception as e:
             if attempt == max_retries:

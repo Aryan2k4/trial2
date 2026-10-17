@@ -66,6 +66,8 @@ export default function SignupPage() {
               <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="text"
+                aria-label="Username"
+                autoComplete="username"
                 autoFocus
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -82,6 +84,8 @@ export default function SignupPage() {
               <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="password"
+                aria-label="Password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/[0.1] rounded-xl py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal-400/50 focus:bg-white/[0.07] transition"
@@ -97,6 +101,8 @@ export default function SignupPage() {
               <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="password"
+                aria-label="Confirm password"
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/[0.1] rounded-xl py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal-400/50 focus:bg-white/[0.07] transition"

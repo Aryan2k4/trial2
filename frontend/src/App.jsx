@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { MotionConfig } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
 import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
@@ -34,7 +35,7 @@ function RouteLoadingFallback() {
 
 export default function App() {
   return (
-    <ThemeProvider>
+    <MotionConfig reducedMotion="user"><ThemeProvider>
       <BrowserRouter>
         <AuthProvider>
           <BuildingProvider>
@@ -56,6 +57,7 @@ export default function App() {
                         <Route path="/occupancy" element={<OccupancyDashboardPage />} />
                         <Route path="/security" element={<SecurityDashboardPage />} />
                         <Route path="/cost" element={<CostDashboardPage />} />
+                        <Route path="*" element={<Navigate to="/executive" replace />} />
                       </Routes>
                     </Suspense>
                   </AppShell>
@@ -67,6 +69,6 @@ export default function App() {
           </BuildingProvider>
         </AuthProvider>
       </BrowserRouter>
-    </ThemeProvider>
+    </ThemeProvider></MotionConfig>
   )
 }

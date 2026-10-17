@@ -21,7 +21,7 @@ router = APIRouter(prefix="/security", tags=["security"])
 DEFAULT_BUILDING = "BLD-HQ-01"
 
 
-@router.post("/ingest")
+@router.post("/ingest", dependencies=[Depends(require_role("admin", "technician"))])
 def ingest(db: Session = Depends(get_db)):
     """Milestone 3: integrate access-control monitoring data. See
     data/build_security_dataset.py for the full honesty disclosure — this
@@ -51,7 +51,7 @@ def building(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(g
         "model_confidence": get_model_confidence(),
         "comparison_model_confidence": get_comparison_model_confidence(),
         "supervised_reference_confidence": get_supervised_reference_confidence(),
-        "data_drift": get_data_drift(security_service.get_recent_events_df(db)),
+        "data_drift": get_data_drift(security_service.get_recent_events_df(db, building_id=building_id)),
     }
 
 
@@ -80,14 +80,14 @@ def alerts(building_id: str = Query(DEFAULT_BUILDING), status: str | None = Quer
     return {"building_id": building_id, "alerts": security_service.list_alerts(db, building_id, status)}
 
 
-@router.get("/investigate")
+@router.get("/investigate", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Genuinely agentic endpoint: the model decides which flagged events
     warrant a real alert, weighing anomaly score against access-point risk."""
     return investigate_security(building_id, db=db)
 
 
-@router.get("/investigate/stream")
+@router.get("/investigate/stream", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate_stream(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Streamed (Server-Sent Events) version of /investigate — see
     app/api/routes.py's investigate_stream for the shared event shape."""
@@ -112,7 +112,7 @@ def _to_bool(v):
     return str(v).strip().lower() in ("1", "true", "yes", "granted", "allowed", "y")
 
 
-@router.post("/ingest/upload")
+@router.post("/ingest/upload", dependencies=[Depends(require_role("admin", "technician"))])
 async def ingest_upload(
     file: UploadFile = File(...),
     replace: bool = Query(True, description="Clear existing events before loading this file"),

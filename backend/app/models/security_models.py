@@ -36,6 +36,7 @@ class AccessEvent(Base):
     anomaly_type_ground_truth = Column(String, nullable=True)
 
     __table_args__ = (
+        Index("ix_sec_emp_ap_ts", "employee_id", "access_point_id", "timestamp"),
         Index("ix_sec_ap_ts", "access_point_id", "timestamp"),
         Index("ix_sec_emp_ts", "employee_id", "timestamp"),
     )

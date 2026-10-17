@@ -37,10 +37,7 @@ function renderPage() {
 }
 
 beforeEach(() => {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    body: { getReader: () => ({ read: () => Promise.resolve({ done: true, value: undefined }) }) },
-  })
+  global.fetch = vi.fn().mockImplementation(async () => new Response('data: {"type":"done","tool_calls":[],"final_text":"Investigation complete"}\n\n'))
 })
 
 describe('ExecutiveDashboardPage', () => {
@@ -65,6 +62,15 @@ describe('ExecutiveDashboardPage', () => {
     facilityService.getHealth.mockRejectedValue(new Error('ECONNREFUSED'))
     renderPage()
     expect(await screen.findByText(/connection failed|failed/i)).toBeInTheDocument()
+  })
+
+  it('recovers from a failed dashboard request when the user retries', async () => {
+    facilityService.getHealth.mockRejectedValueOnce(new Error('temporarily unavailable'))
+    renderPage()
+    const retry = await screen.findByRole('button', { name: /try again/i })
+    fireEvent.click(retry)
+    expect(await screen.findByText('74')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /try again/i })).not.toBeInTheDocument()
   })
 
   it('starts a stream when the investigate button is clicked', async () => {

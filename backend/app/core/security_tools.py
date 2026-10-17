@@ -18,7 +18,7 @@ def get_security_summary(building_id: str = "BLD-HQ-01") -> dict:
     db = SessionLocal()
     try:
         access_points = security_service.list_access_points(db, building_id)
-        events = security_service.get_recent_events_df(db, limit=3000)
+        events = security_service.get_recent_events_df(db, limit=3000, building_id=building_id)
         first_visit_map = security_service.get_first_visit_timestamps(db)
         scored = score_events(events, first_visit_map)
         ap_meta = [{"access_point_id": a.access_point_id, "name": a.name, "risk_level": a.risk_level} for a in access_points]
@@ -38,7 +38,7 @@ def get_flagged_events(building_id: str = "BLD-HQ-01", min_score: float = 0.5) -
     """
     db = SessionLocal()
     try:
-        events = security_service.get_recent_events_df(db, limit=3000)
+        events = security_service.get_recent_events_df(db, limit=3000, building_id=building_id)
         first_visit_map = security_service.get_first_visit_timestamps(db)
         scored = score_events(events, first_visit_map)
         flagged = top_flagged_events(scored, limit=30)

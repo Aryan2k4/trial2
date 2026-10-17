@@ -1,3 +1,4 @@
+import ConnectionError from '../../components/ui/ConnectionError'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Zap, Activity, TrendingUp, AlertTriangle, Download, Database, UploadCloud } from 'lucide-react'
 import { energyService } from '../../services/energyService'
@@ -44,7 +45,7 @@ export default function EnergyDashboardPage() {
   const [briefing, setBriefing] = useState(null)
   const [briefingLoading, setBriefingLoading] = useState(false)
   const [forecastScatter, setForecastScatter] = useState(null)
-  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/energy/investigate/stream')
+  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/energy/investigate/stream', buildingId)
   const [loading, setLoading] = useState(true)
   const [rangeLoading, setRangeLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -70,6 +71,7 @@ export default function EnergyDashboardPage() {
     setReadings(readingsData.readings)
     setForecastScatter(scatterData)
     setLastUpdated(new Date())
+    setError(null)
   }, [buildingId])
 
   const fetchBriefing = useCallback(async () => {
@@ -139,6 +141,7 @@ export default function EnergyDashboardPage() {
       setReadings(readingsData.readings)
       setDashboard(dash)
       setLastUpdated(new Date())
+    setError(null)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -154,6 +157,7 @@ export default function EnergyDashboardPage() {
   // "last updated" timestamp the same way the old one-shot call did.
   useEffect(() => {
     if (investigation?.done) setLastUpdated(new Date())
+    setError(null)
   }, [investigation?.done])
 
   // Real CSV export of the currently loaded readings — not decorative.
@@ -179,11 +183,7 @@ export default function EnergyDashboardPage() {
   }
 
   if (error) {
-    return (
-      <div className="p-6 text-red-500 dark:text-red-400 text-sm font-mono">
-        connection failed: {error} — confirm the FastAPI server is running on :8000
-      </div>
-    )
+    return <ConnectionError onRetry={refreshNow} retrying={refreshing} />
   }
 
   const { consumption, breakdown, trend_pct_vs_prev_period, anomaly_count, top_recommendations } = dashboard
@@ -287,7 +287,7 @@ export default function EnergyDashboardPage() {
         </div>
 
         {/* Investigation zone — visually distinct glass panel, separated from the rest of the page */}
-        <AgentInvestigationPanel investigation={investigation} isLoading={investigating} onRun={runInvestigation} buildingId={dashboard.building_id} title="Ask the Energy Agent" prompt="It chooses the evidence to inspect, connects consumption with building conditions, then recommends the next practical move." traceTitle="Energy Agent Trace" hint="A live, self-directed tool sequence — not a preset checklist." buttonLabel="INVESTIGATE ENERGY EFFICIENCY" accent="blue" />
+        <AgentInvestigationPanel investigation={investigation} isLoading={investigating} onRun={runInvestigation} buildingId={dashboard.building_id} title="Ask the Energy Agent" prompt="Inspect consumption and building conditions, then review recommended next steps. Demo mode uses a scripted investigation; a connected AI provider can choose its own tools." traceTitle="Energy Agent Trace" hint="Tool results arrive live. The provider label identifies scripted demo runs." buttonLabel="INVESTIGATE ENERGY EFFICIENCY" accent="blue" />
 
         <RecommendationsList recommendations={top_recommendations} />
       </div>

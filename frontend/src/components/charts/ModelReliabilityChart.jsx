@@ -537,7 +537,7 @@ export default function ModelReliabilityChart({
 
       <br/>
 
-      ● Cluster near the top-right = healthy engines correctly predicted near the RUL ceiling (spread slightly apart so overlapping points stay visible)
+      ● Overlapping points are spread slightly apart for visibility; hover to inspect the original values.
 
       {hasInterval && (
         <>

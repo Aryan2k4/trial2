@@ -1,3 +1,5 @@
+from app.core.security import require_role
+from app.core.cache_revision import current_revision
 """
 Facility Intelligence Engine (Milestone 4).
 
@@ -95,7 +97,8 @@ def _energy_subscore(analysis: dict | None) -> float | None:
 def _maintenance_subscore(analysis: dict | None) -> float | None:
     if analysis is None:
         return None
-    return float(analysis["fleet"].get("avg_health_score", 100) or 100)
+    score = analysis["fleet"].get("avg_health_score")
+    return float(score) if score is not None else None
 
 
 def _occupancy_subscore(analysis: dict | None) -> float | None:
@@ -148,11 +151,12 @@ def _get_analysis_lock(building_id: str):
 
 def _get_agent_analyses(db: Session, building_id: str, force_refresh: bool = False):
     now = time.time()
+    revision = current_revision()
     lock = _get_analysis_lock(building_id)
     with lock:
         if not force_refresh and building_id in _agent_analyses_cache:
             entry = _agent_analyses_cache[building_id]
-            if now - entry["timestamp"] < CACHE_TTL_SECONDS:
+            if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL_SECONDS:
                 return entry["data"]
 
         energy, energy_err = _safe_analyze("energy", lambda: EnergyAgent(db, building_id, limit=672).analyze())
@@ -169,7 +173,7 @@ def _get_agent_analyses(db: Session, building_id: str, force_refresh: bool = Fal
             "cost": cost, "cost_err": cost_err,
         }
 
-        _agent_analyses_cache[building_id] = {"timestamp": time.time(), "data": data}
+        _agent_analyses_cache[building_id] = {"revision": revision, "timestamp": time.time(), "data": data}
         return data
 
 
@@ -262,7 +266,7 @@ def facility_kpis(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depe
     }
 
 
-@router.get("/investigate")
+@router.get("/investigate", dependencies=[Depends(require_role("admin", "technician"))])
 def facility_investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """
     The cross-combined agent (Milestone 4): a single agentic run with
@@ -277,13 +281,13 @@ def facility_investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session
     return investigate_facility(building_id, db=db)
 
 
-@router.get("/investigate/stream")
+@router.get("/investigate/stream", dependencies=[Depends(require_role("admin", "technician"))])
 def facility_investigate_stream(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Streamed (Server-Sent Events) version of /investigate."""
     return sse_stream_response(investigate_facility_stream(building_id, db=db))
 
 
-@router.get("/negotiate")
+@router.get("/negotiate", dependencies=[Depends(require_role("admin", "technician"))])
 def facility_negotiate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """
     Multi-agent negotiation: checks whether the Cost Agent and Maintenance

@@ -21,7 +21,7 @@ router = APIRouter(prefix="/cost", tags=["cost"])
 DEFAULT_BUILDING = "BLD-HQ-01"
 
 
-@router.post("/ingest")
+@router.post("/ingest", dependencies=[Depends(require_role("admin", "technician"))])
 def ingest(db: Session = Depends(get_db)):
     """Milestone 4: integrate facility cost data. Combines real BBMP
     (Bengaluru) capital-works tender data with cross-agent-derived
@@ -80,7 +80,9 @@ def records(limit: int = Query(200, le=1000), db: Session = Depends(get_db)):
     df = cost_service.get_records_df(db)
     if df.empty:
         return {"records": []}
-    return {"records": df.tail(limit).to_dict(orient="records")}
+    # Pandas represents missing optional values as NaN, which JSON forbids.
+    rows = df.tail(limit).astype(object)
+    return {"records": rows.where(pd.notna(rows), None).to_dict(orient="records")}
 
 
 @router.get("/alerts")
@@ -88,14 +90,14 @@ def alerts(building_id: str = Query(DEFAULT_BUILDING), status: str | None = Quer
     return {"building_id": building_id, "alerts": cost_service.list_alerts(db, building_id, status)}
 
 
-@router.get("/investigate")
+@router.get("/investigate", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Genuinely agentic endpoint: the model decides which budget risks,
     flagged invoices, or vendor-concentration signals warrant a real alert."""
     return investigate_cost(building_id, db=db)
 
 
-@router.get("/investigate/stream")
+@router.get("/investigate/stream", dependencies=[Depends(require_role("admin", "technician"))])
 def investigate_stream(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(get_db)):
     """Streamed (Server-Sent Events) version of /investigate — see
     app/api/routes.py's investigate_stream for the shared event shape."""
@@ -113,7 +115,7 @@ COST_ALIASES = {
 }
 
 
-@router.post("/ingest/upload")
+@router.post("/ingest/upload", dependencies=[Depends(require_role("admin", "technician"))])
 async def ingest_upload(
     file: UploadFile = File(...),
     replace: bool = Query(True, description="Clear existing records before loading this file"),

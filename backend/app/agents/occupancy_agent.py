@@ -1,3 +1,4 @@
+from app.core.cache_revision import current_revision
 """
 Occupancy Agent (Milestone 3).
 
@@ -37,10 +38,11 @@ class OccupancyAgent:
 
     def analyze(self) -> dict:
         now = time.time()
+        revision = current_revision()
         with _occupancy_lock:
             if self.building_id in _occupancy_cache:
                 entry = _occupancy_cache[self.building_id]
-                if now - entry["timestamp"] < CACHE_TTL:
+                if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
         all_readings = occupancy_service.get_all_zone_readings(self.db, self.building_id, limit_per_zone=500)
@@ -62,7 +64,7 @@ class OccupancyAgent:
             "heatmap": heatmap_data(readings_by_id),
         }
         with _occupancy_lock:
-            _occupancy_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+            _occupancy_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": data}
         return data
 
     def recommend(self, analysis: dict | None = None) -> list[dict]:

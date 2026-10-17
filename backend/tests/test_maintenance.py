@@ -7,6 +7,8 @@ from app.main import app
 
 client = TestClient(app)
 client.__enter__()
+from app.core.security import create_access_token
+client.headers["Authorization"] = f"Bearer {create_access_token('admin')}"
 
 
 def test_maintenance_ingest():

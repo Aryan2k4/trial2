@@ -1,15 +1,5 @@
-"""
-Auth primitives: bcrypt password hashing + JWT issue/verify, plus the
-`get_current_user` FastAPI dependency used to protect mutation endpoints
-(see app/api/*_routes.py's /records POST/DELETE routes).
-
-Scope decision (documented here since it's not obvious from the code
-alone): this protects the DATA-MANAGEMENT actions (manually adding/
-deleting a record) across all five domains — not the read-only dashboard
-GETs, and not /ingest or /ingest/upload (bulk-loading a dataset is closer
-to "system setup" than an end-user action, and gating it would have meant
-rewriting the auth flow into every existing test file's setup step rather
-than just the ones that actually exercise manual record management).
+"""JWT authentication and role checks for data changes and investigations.
+Read-only dashboard endpoints intentionally expose the shared demo dataset.
 """
 import os
 import bcrypt

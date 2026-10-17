@@ -1,3 +1,4 @@
+import ConnectionError from '../../components/ui/ConnectionError'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { maintenanceService } from '../../services/maintenanceService'
 import FleetKpiRow from '../../components/maintenance/FleetKpiRow'
@@ -47,7 +48,7 @@ export default function MaintenanceDashboardPage() {
   const [alerts, setAlerts] = useState([])
   const [workOrders, setWorkOrders] = useState([])
   const [selectedAssetId, setSelectedAssetId] = useState(null)
-  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/maintenance/investigate/stream')
+  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/maintenance/investigate/stream', buildingId)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(null)
@@ -69,6 +70,7 @@ export default function MaintenanceDashboardPage() {
     setWorkOrders(workOrdersData.work_orders)
     setModelScatter(scatterData)
     setLastUpdated(new Date())
+    setError(null)
   }, [buildingId])
 
   // Manual refresh — used by the button in LiveIndicator.
@@ -122,6 +124,7 @@ export default function MaintenanceDashboardPage() {
       const createdOne = wo.work_orders.length > workOrders.length
       setWorkOrders(wo.work_orders)
       setLastUpdated(new Date())
+    setError(null)
       if (createdOne) {
         setToast({ message: 'agent opened a new work order from this investigation', variant: 'success' })
       }
@@ -146,11 +149,7 @@ export default function MaintenanceDashboardPage() {
   }
 
   if (error) {
-    return (
-      <div className="p-6 text-red-500 dark:text-red-400 text-sm font-mono">
-        connection failed: {error} — confirm the FastAPI server is running on :8000
-      </div>
-    )
+    return <ConnectionError onRetry={refreshNow} retrying={refreshing} />
   }
 
   const { fleet, assets, risk_ranking } = fleetData

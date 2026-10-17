@@ -26,7 +26,7 @@ export default function LoginPage() {
       show(`Welcome back, ${username}.`, 'success')
       navigate(redirectTo, { replace: true })
     } catch (err) {
-      const detail = err.response?.data?.detail || 'Login failed — check your username and password.'
+      const detail = err.response?.data?.detail || (err.response ? 'Login failed — check your username and password.' : 'Cannot reach the server. Free hosting may be waking up; please try again shortly.')
       setError(detail)
       show(detail, 'error')
     } finally {
@@ -60,6 +60,8 @@ export default function LoginPage() {
               <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="text"
+                aria-label="Username"
+                autoComplete="username"
                 autoFocus
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -75,6 +77,8 @@ export default function LoginPage() {
               <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
                 type="password"
+                aria-label="Password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/[0.1] rounded-xl py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-teal-400/50 focus:bg-white/[0.07] transition"
@@ -105,7 +109,7 @@ export default function LoginPage() {
           New here? <Link to="/signup" className="text-teal-400 hover:text-teal-300 underline underline-offset-2">Create an account</Link>
         </p>
         <p className="text-center font-body text-[11px] text-slate-600 mt-2">
-          Demo admin credentials are in <span className="font-mono text-slate-500">backend/.env</span> (ADMIN_USERNAME / ADMIN_PASSWORD).
+          Explore a shared facility demo. Use demonstration data only.
         </p>
       </motion.div>
     </div>

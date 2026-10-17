@@ -1,10 +1,9 @@
 # Agentic AI for Smart Facility Operations & Optimization
 
-### 🔗 [Live Demo](https://facilityops.onrender.com/)
+The reliability rebuild serves React and FastAPI from one URL. The new deployment URL will be recorded after hosting verification; the previous demo link is not a verified deployment of this branch.
 
-The backend is on Render's free tier, so it sleeps after inactivity. If the demo above doesn't load within ~30 seconds, [wake the backend here first](https://facilityops.onrender.com/health), then reload the live demo link.
+Start with [the runbook](docs/RUNBOOK.md), [interview guide](docs/INTERVIEW_GUIDE.md), and [source map](docs/SOURCE_MAP.md). Free hosting uses Render plus external Neon PostgreSQL. The default `mock` provider is scripted, and live TensorFlow models are optional; these limitations are visible in the UI.
 
-![Tests](https://img.shields.io/badge/tests-59%2F59%20passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/backend-FastAPI-009688)
 ![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20Vite-61DAFB)
@@ -24,7 +23,7 @@ A few things we tried to get right instead of faking:
 - **Agents actually hand work to each other.** Energy can open a maintenance ticket. Occupancy can trigger a security alert. These are real backend function calls, not just links between dashboards.
 - **We disclose our data.** Some of it is real public data, some is derived from that real data with a documented formula, and some is synthetic because no usable real dataset exists (e.g. access-control logs). We say which is which, everywhere it matters.
 
-This submission covers Milestones 1–4: all five agents, the ML pipeline behind each, the agentic tool-calling layer, and all six dashboards (five domain dashboards + one executive overview). 59/59 tests passing.
+This submission covers Milestones 1–4: all five agents, the ML pipeline behind each, the agentic tool-calling layer, and all six dashboards (five domain dashboards + one executive overview). See the runbook for current verification commands.
 
 ---
 
@@ -143,7 +142,7 @@ __init__()  →  analyze()  →  recommend()  →  run()
 | LLM Providers | Groq (recommended, free tier), Gemini, Mock (no key required) |
 | ML | Linear/Logistic Regression, Random Forest, Gradient Boosting, Histogram Gradient Boosting, LSTM, Isolation Forest, Local Outlier Factor |
 | Infra | Docker & Docker Compose |
-| Testing | pytest (59/59 passing) |
+| Testing | pytest + Vitest |
 
 ---
 
@@ -273,7 +272,7 @@ cd backend
 python -m pytest tests/ -v
 ```
 
-59/59 passing — covers ingestion, consumption/spend summaries, analytics shape, recommendation validity, dashboard payloads, readings pagination, ML forecast/anomaly endpoints, LLM briefings, agentic investigations (checking for real multi-tool calls, not canned responses), cross-agent handoffs, the combined real+derived Cost dataset, and the domain-isolation guarantee for derived cost data.
+The automated suite covers ingestion, consumption/spend summaries, analytics shape, recommendation validity, dashboard payloads, readings pagination, ML forecast/anomaly endpoints, LLM briefings, agentic investigations (checking for real multi-tool calls, not canned responses), cross-agent handoffs, the combined real+derived Cost dataset, and the domain-isolation guarantee for derived cost data.
 
 ---
 

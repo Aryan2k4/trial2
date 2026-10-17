@@ -1,3 +1,4 @@
+from app.core.cache_revision import current_revision
 """
 Cost Optimization Agent (Milestone 4).
 
@@ -37,10 +38,11 @@ class CostAgent:
 
     def analyze(self) -> dict:
         now = time.time()
+        revision = current_revision()
         with _cost_lock:
             if self.building_id in _cost_cache:
                 entry = _cost_cache[self.building_id]
-                if now - entry["timestamp"] < CACHE_TTL:
+                if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
         records = cost_service.get_records_df(self.db, self.building_id)
@@ -60,7 +62,7 @@ class CostAgent:
             "vendor_concentration": vendor_concentration(vendors_meta),
         }
         with _cost_lock:
-            _cost_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+            _cost_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": data}
         return data
 
     def recommend(self, analysis: dict | None = None) -> list[dict]:

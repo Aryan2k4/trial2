@@ -7,6 +7,7 @@ function-calling machinery.
 """
 from app.core.database import SessionLocal
 from app.services import maintenance_service
+from app.agents.maintenance_agent import MaintenanceAgent
 from app.utils.maintenance_analytics import score_asset, score_fleet, fleet_summary, risk_ranking
 
 
@@ -20,15 +21,7 @@ def get_fleet_summary(building_id: str = "BLD-HQ-01") -> dict:
     """
     db = SessionLocal()
     try:
-        assets = maintenance_service.list_assets(db, building_id)
-        metas, readings_list = [], []
-        for a in assets:
-            readings = maintenance_service.get_readings_df(db, a.asset_id)
-            if readings.empty:
-                continue
-            metas.append({"asset_id": a.asset_id, "name": a.name, "asset_type": a.asset_type, "location": a.location})
-            readings_list.append(readings)
-        return fleet_summary(score_fleet(metas, readings_list))
+        return MaintenanceAgent(db, building_id).analyze()["fleet"]
     finally:
         db.close()
 
@@ -65,17 +58,8 @@ def get_at_risk_assets(building_id: str = "BLD-HQ-01", max_health_score: float =
     """
     db = SessionLocal()
     try:
-        assets = maintenance_service.list_assets(db, building_id)
-        metas, readings_list = [], []
-        for a in assets:
-            readings = maintenance_service.get_readings_df(db, a.asset_id)
-            if readings.empty:
-                continue
-            metas.append({"asset_id": a.asset_id, "name": a.name, "asset_type": a.asset_type, "location": a.location})
-            readings_list.append(readings)
-        scored = score_fleet(metas, readings_list)
-        at_risk = [a for a in scored if a["health_score"] <= max_health_score]
-        return risk_ranking(at_risk, limit=10)
+        scored = MaintenanceAgent(db, building_id).analyze()["assets"]
+        return risk_ranking([a for a in scored if a["health_score"] <= max_health_score], limit=10)
     finally:
         db.close()
 

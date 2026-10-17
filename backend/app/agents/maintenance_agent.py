@@ -1,3 +1,4 @@
+from app.core.cache_revision import current_revision
 """
 Maintenance Agent (Milestone 2).
 
@@ -40,22 +41,23 @@ class MaintenanceAgent:
     # ---- Analysis -------------------------------------------------
     def analyze(self) -> dict:
         now = time.time()
+        revision = current_revision()
         lock = _get_lock(self.building_id)
         with lock:
             if self.building_id in _agent_cache:
                 entry = _agent_cache[self.building_id]
-                if now - entry["timestamp"] < CACHE_TTL:
+                if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
             if not self.assets:
                 empty = {"assets": [], "fleet": fleet_summary([]), "risk_ranking": []}
-                _agent_cache[self.building_id] = {"timestamp": time.time(), "data": empty}
+                _agent_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": empty}
                 return empty
 
             all_readings = maintenance_service.get_all_readings_df(self.db, self.building_id)
             if all_readings.empty:
                 empty = {"assets": [], "fleet": fleet_summary([]), "risk_ranking": []}
-                _agent_cache[self.building_id] = {"timestamp": time.time(), "data": empty}
+                _agent_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": empty}
                 return empty
 
             # Group all readings by asset_id in memory (instantaneous)
@@ -80,7 +82,7 @@ class MaintenanceAgent:
                 "fleet": fleet_summary(scored),
                 "risk_ranking": risk_ranking(scored, limit=10),
             }
-            _agent_cache[self.building_id] = {"timestamp": time.time(), "data": data}
+            _agent_cache[self.building_id] = {"revision": revision, "timestamp": time.time(), "data": data}
             return data
 
     # ---- Recommendations -------------------------------------------

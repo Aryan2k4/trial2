@@ -53,42 +53,31 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
 
-    # Auto-ingest in a background thread so port 8000 binds and health checks pass immediately on Render boot
+    # Each domain owns its transaction. A failed import must not suppress
+    # the remaining domains, and liveness is distinct from data readiness.
+    jobs = [
+        ("energy", data_service.has_data, data_service.ingest_from_csv),
+        ("maintenance", maintenance_service.has_data, maintenance_service.ingest_fleet),
+        ("occupancy", occupancy_service.has_data, occupancy_service.ingest_zones),
+        ("security", security_service.has_data, security_service.ingest_events),
+        ("cost", cost_service.has_data, cost_service.ingest_records),
+    ]
+    app.state.data_status = {name: "loading" for name, _, _ in jobs}
+
     def _run_background_ingest():
-        db = SessionLocal()
-        try:
-            if not data_service.has_data(db, "BLD-HQ-01"):
+        for name, has_data, ingest in jobs:
+            with SessionLocal() as db:
                 try:
-                    data_service.ingest_from_csv(db)
-                except FileNotFoundError:
-                    pass
-            if not maintenance_service.has_data(db, "BLD-HQ-01"):
-                try:
-                    maintenance_service.ingest_fleet(db)
-                except FileNotFoundError:
-                    pass
-            if not occupancy_service.has_data(db, "BLD-HQ-01"):
-                try:
-                    occupancy_service.ingest_zones(db)
-                except FileNotFoundError:
-                    pass
-            if not security_service.has_data(db, "BLD-HQ-01"):
-                try:
-                    security_service.ingest_events(db)
-                except FileNotFoundError:
-                    pass
-            if not cost_service.has_data(db, "BLD-HQ-01"):
-                try:
-                    cost_service.ingest_records(db)
-                except FileNotFoundError:
-                    pass
-        except Exception as e:
-            logger.warning(f"Background auto-ingest encountered error (non-fatal): {e}")
-        finally:
-            db.close()
+                    if not has_data(db, "BLD-HQ-01"):
+                        ingest(db)
+                    app.state.data_status[name] = "ready"
+                except Exception:
+                    db.rollback()
+                    app.state.data_status[name] = "failed"
+                    logger.exception("Startup ingestion failed for %s", name)
 
     import asyncio
-    asyncio.get_running_loop().run_in_executor(None, _run_background_ingest)
+    ingest_task = asyncio.create_task(asyncio.to_thread(_run_background_ingest))
 
     # Pre-warm the maintenance ML models (Keras LSTM + sklearn trees) at
     # server boot, not on the first real dashboard request. Loading is
@@ -121,7 +110,10 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"Model pre-warm skipped (non-fatal): {e}")
 
-    yield
+    try:
+        yield
+    finally:
+        await ingest_task
 
 
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
@@ -146,7 +138,7 @@ async def catch_unhandled_exceptions(request: Request, call_next):
         logger.exception(f"Unhandled error on {request.method} {request.url.path}")
         return JSONResponse(
             status_code=500,
-            content={"detail": f"{type(exc).__name__}: {exc}", "path": str(request.url.path)},
+            content={"detail": "An unexpected server error occurred. Please retry.", "path": str(request.url.path)},
         )
 
 
@@ -181,6 +173,14 @@ def health():
     return {"status": "healthy"}
 
 
+@app.get("/ready")
+def readiness():
+    domains = getattr(app.state, "data_status", {})
+    ready = bool(domains) and all(value == "ready" for value in domains.values())
+    status = "ready" if ready else ("degraded" if "failed" in domains.values() else "loading")
+    return JSONResponse(status_code=200 if ready else 503, content={"status": status, "domains": domains})
+
+
 @app.get("/{full_path:path}", include_in_schema=False)
 def serve_frontend(full_path: str):
     """Serve Vite assets directly and fall back to the SPA for client routes."""
@@ -188,7 +188,7 @@ def serve_frontend(full_path: str):
         return JSONResponse(status_code=404, content={"detail": "Not found"})
 
     # API typos must remain normal API 404s rather than returning the SPA.
-    if full_path.startswith("api/"):
+    if full_path == "api" or full_path.startswith("api/"):
         return JSONResponse(status_code=404, content={"detail": "Not found"})
 
     requested_file = (FRONTEND_DIST / full_path).resolve()
@@ -199,4 +199,6 @@ def serve_frontend(full_path: str):
 
     if requested_file.is_file():
         return FileResponse(requested_file)
+    if full_path.startswith("assets/") or Path(full_path).suffix:
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
     return FileResponse(FRONTEND_INDEX)

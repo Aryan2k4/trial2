@@ -1,3 +1,4 @@
+import ConnectionError from '../../components/ui/ConnectionError'
 import { useEffect, useState, useCallback } from 'react'
 import { LayoutDashboard, Zap, Wrench, Users, ShieldCheck, IndianRupee } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -22,7 +23,7 @@ export default function ExecutiveDashboardPage() {
   const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [error, setError] = useState(null)
-  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/facility/investigate/stream')
+  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/facility/investigate/stream', buildingId)
 
   const load = useCallback(async () => {
     const [h, a, k] = await Promise.all([
@@ -34,6 +35,7 @@ export default function ExecutiveDashboardPage() {
     setAlertsData(a)
     setKpis(k)
     setLastUpdated(new Date())
+    setError(null)
   }, [buildingId])
 
   const refreshNow = useCallback(async () => {
@@ -68,7 +70,7 @@ export default function ExecutiveDashboardPage() {
   }
 
   if (error) {
-    return <div className="p-6 text-red-500 dark:text-red-400 text-sm font-mono">connection failed: {error}</div>
+    return <ConnectionError onRetry={refreshNow} retrying={refreshing} />
   }
 
   return (

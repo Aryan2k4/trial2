@@ -29,6 +29,7 @@ export default defineConfig({
         // App.jsx.
         manualChunks: {
           'vendor-charts': ['recharts'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-motion': ['framer-motion'],
           'vendor-icons': ['lucide-react'],
         },

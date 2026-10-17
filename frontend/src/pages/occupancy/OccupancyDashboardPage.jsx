@@ -1,3 +1,4 @@
+import ConnectionError from '../../components/ui/ConnectionError'
 import { useEffect, useState, useCallback } from 'react'
 import { UsersRound, Database, UploadCloud } from 'lucide-react'
 import { occupancyService } from '../../services/occupancyService'
@@ -34,7 +35,7 @@ export default function OccupancyDashboardPage() {
   const { buildingId } = useBuilding()
   const [data, setData] = useState(null)
   const [selectedZoneId, setSelectedZoneId] = useState(null)
-  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/occupancy/investigate/stream')
+  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/occupancy/investigate/stream', buildingId)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(null)
@@ -46,6 +47,7 @@ export default function OccupancyDashboardPage() {
     const result = await occupancyService.getBuilding(buildingId)
     setData(result)
     setLastUpdated(new Date())
+    setError(null)
   }, [buildingId])
 
   const refreshNow = useCallback(async () => {
@@ -80,7 +82,7 @@ export default function OccupancyDashboardPage() {
   }
 
   if (error) {
-    return <div className="p-6 text-red-500 dark:text-red-400 text-sm font-mono">connection failed: {error}</div>
+    return <ConnectionError onRetry={refreshNow} retrying={refreshing} />
   }
 
   return (

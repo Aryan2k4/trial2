@@ -1,3 +1,4 @@
+from app.core.cache_revision import current_revision
 """
 Energy Agent (Milestone 1).
 
@@ -45,10 +46,11 @@ class EnergyAgent:
     def analyze(self) -> dict:
         cache_key = f"{self.building_id}:{self.limit}"
         now = time.time()
+        revision = current_revision()
         with _energy_lock:
             if cache_key in _energy_cache:
                 entry = _energy_cache[cache_key]
-                if now - entry["timestamp"] < CACHE_TTL:
+                if entry.get("revision") == revision and now - entry["timestamp"] < CACHE_TTL:
                     return entry["data"]
 
         data = {
@@ -61,7 +63,7 @@ class EnergyAgent:
             "occupancy": occupancy_correlation(self.df),
         }
         with _energy_lock:
-            _energy_cache[cache_key] = {"timestamp": time.time(), "data": data}
+            _energy_cache[cache_key] = {"revision": revision, "timestamp": time.time(), "data": data}
         return data
 
     # ---- Recommendations -------------------------------------------

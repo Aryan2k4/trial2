@@ -12,6 +12,7 @@ is the slow part, ~seconds; the actual predict() call on one window is
 fast), rather than reloaded on every request.
 """
 import json
+import os
 import random
 from pathlib import Path
 
@@ -78,6 +79,8 @@ def run_live_inference() -> dict:
     inference with the actual trained model. Returns the model's live
     prediction, the true label, the raw sensor trace (for charting), and
     whether the model got this specific real example right."""
+    if os.getenv("ENABLE_TENSORFLOW", "false" if os.getenv("RENDER") else "true").lower() not in {"1", "true", "yes"}:
+        return {"available": False, "reason": "tensorflow_disabled", "message": "Live CNN inference is disabled on this hosting plan. The core occupancy classifier remains available."}
     if not is_available():
         return {"available": False, "reason": "model_files_missing"}
 
@@ -155,6 +158,8 @@ def run_live_inference_on_zone(db, zone_id: str) -> dict:
     """
     from app.models.occupancy_models import ZoneReading
 
+    if os.getenv("ENABLE_TENSORFLOW", "false" if os.getenv("RENDER") else "true").lower() not in {"1", "true", "yes"}:
+        return {"available": False, "reason": "tensorflow_disabled", "message": "Live CNN inference is disabled on this hosting plan. The core occupancy classifier remains available."}
     if not is_available():
         return {"available": False, "reason": "model_files_missing"}
 

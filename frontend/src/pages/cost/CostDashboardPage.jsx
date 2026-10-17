@@ -1,3 +1,4 @@
+import ConnectionError from '../../components/ui/ConnectionError'
 import { useEffect, useState, useCallback } from 'react'
 import { IndianRupee, Database, UploadCloud } from 'lucide-react'
 import { costService, formatINR } from '../../services/costService'
@@ -36,7 +37,7 @@ export default function CostDashboardPage() {
   const { buildingId } = useBuilding()
   const [data, setData] = useState(null)
   const [alerts, setAlerts] = useState([])
-  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/cost/investigate/stream')
+  const { investigation, isLoading: investigating, run: runInvestigationStream } = useAgentStream('/cost/investigate/stream', buildingId)
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(null)
@@ -52,6 +53,7 @@ export default function CostDashboardPage() {
     setData(building)
     setAlerts(alertsData.alerts)
     setLastUpdated(new Date())
+    setError(null)
   }, [buildingId])
 
   const refreshNow = useCallback(async () => {
@@ -94,7 +96,7 @@ export default function CostDashboardPage() {
   }
 
   if (error) {
-    return <div className="p-6 text-red-500 dark:text-red-400 text-sm font-mono">connection failed: {error}</div>
+    return <ConnectionError onRetry={refreshNow} retrying={refreshing} />
   }
 
   return (

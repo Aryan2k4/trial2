@@ -48,8 +48,7 @@ export default function ForecastModelComparison({ horizon }) {
       </div>
       <p className="font-body text-[11px] text-slate-500 mt-3">
         Naive baselines for comparison: predicting "no change" gives {data.naive_flat_mae_kwh} kWh MAE;
-        predicting "same as this time yesterday" gives {data.naive_daily_mae_kwh} kWh MAE. Lower MAE is better — all 3 models are trained
-        and evaluated fresh for this horizon, the winner isn't fixed in advance.
+        predicting "same as this time yesterday" gives {data.naive_daily_mae_kwh} kWh MAE. Lower MAE is better. These are stored training evaluations for the selected horizon.
       </p>
     </Card>
   )
