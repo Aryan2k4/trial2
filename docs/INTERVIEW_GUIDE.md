@@ -47,6 +47,8 @@ Only claim work you actually did. Distinguish original team contributions from r
 
 **Mock mode:** `MockProvider` runs conditional Python branches and real tools. Tool effects are real, but the choice of tool is scripted. Never describe mock mode as autonomous LLM reasoning. `AIProvider`’s default stream replays completed results; Groq overrides it for events during execution. Streaming-compatible does not necessarily mean model-token streaming.
 
+**Groq reliability:** Tool events arrive during execution; the completed summary is delivered once, without a second generation request. SDK retries are disabled; a 429 with a `retry-after` of at most ten seconds gets one request-only retry. Model fallback applies only to unavailable/decommissioned models before tool execution. A failed investigation never automatically replays mock tools, since a previous tool may already have committed an action. The free account's token quota can still interrupt a run; the UI reports that limitation.
+
 ## Domain details and current saved metrics
 
 ### Energy

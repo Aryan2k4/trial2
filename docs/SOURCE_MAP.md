@@ -177,7 +177,7 @@ Generated from Python AST and frontend source paths. See INTERVIEW_GUIDE.md for 
 
 ### `backend/app/core/intelligence_engine.py`
 
-`_safe_generate` (line 41), `_safe_agentic_task` (line 65), `summarize_energy_analysis` (line 216), `_run_investigation` (line 241), `_run_investigation_stream` (line 287), `investigate_energy` (line 334), `investigate_energy_stream` (line 345), `investigate_maintenance` (line 350), `investigate_maintenance_stream` (line 361), `investigate_occupancy` (line 366), `investigate_occupancy_stream` (line 376), `investigate_security` (line 381), `investigate_security_stream` (line 392), `investigate_cost` (line 397), `investigate_cost_stream` (line 407), `investigate_facility` (line 412), `investigate_facility_stream` (line 434)
+`_safe_generate` (line 41), `_safe_agentic_task` (line 65), `summarize_energy_analysis` (line 215), `_run_investigation` (line 240), `_run_investigation_stream` (line 286), `investigate_energy` (line 329), `investigate_energy_stream` (line 340), `investigate_maintenance` (line 345), `investigate_maintenance_stream` (line 356), `investigate_occupancy` (line 361), `investigate_occupancy_stream` (line 371), `investigate_security` (line 376), `investigate_security_stream` (line 387), `investigate_cost` (line 392), `investigate_cost_stream` (line 402), `investigate_facility` (line 407), `investigate_facility_stream` (line 429)
 
 ### `backend/app/core/maintenance_tools.py`
 
@@ -253,7 +253,7 @@ Generated from Python AST and frontend source paths. See INTERVIEW_GUIDE.md for 
 
 ### `backend/app/services/ai_providers/groq_provider.py`
 
-`GroqProvider` (line 46)
+`GroqProvider` (line 16)
 
 ### `backend/app/services/ai_providers/mock_provider.py`
 

@@ -2,6 +2,8 @@
 
 ## Local single-origin application (Windows)
 
+After the first-time dependency setup below, run `./start.ps1` from the repository root. It rebuilds the frontend and starts the combined app using your `backend/.env`, including your chosen AI provider. Restart after changing environment settings.
+
 Use Python 3.13 and Node 20 or newer. From the repository root:
 
 ```powershell

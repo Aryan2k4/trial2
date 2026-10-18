@@ -69,9 +69,8 @@ def _safe_agentic_task(provider, provider_name: str, system_prompt: str, task_pr
     try:
         return provider.run_agentic_task(system_prompt, task_prompt, tools, building_id), provider_name, None
     except Exception as e:
-        logger.warning(f"{provider_name} run_agentic_task() call failed at runtime ({e}); falling back to MockProvider.")
-        result = MockProvider().run_agentic_task(system_prompt, task_prompt, tools, building_id)
-        return result, f"{provider_name} (unavailable)", str(e)
+        logger.warning("%s investigation failed; not replaying potentially committed actions", provider_name)
+        return {"final_text": "Investigation interrupted. Review existing actions before retrying.", "tool_calls": []}, f"{provider_name} (unavailable)", str(e)
 
 SUMMARY_SYSTEM_PROMPT = (
     "You are the Intelligence Engine of a facility operations AI platform. "
@@ -291,10 +290,8 @@ def _run_investigation_stream(domain: str, building_id: str, db, system_prompt: 
     but also handles the memory read/write around the stream (context in
     before the first event, save-back after the final "done" event) so
     every domain's stream endpoint gets memory continuity for free too.
-    Falls back to MockProvider's (also-streaming, via the base class
-    default) output on any runtime provider failure, same safety net as
-    _safe_agentic_task, just applied to a generator instead of a
-    return value.
+    Runtime failures end the stream with an explicit error. Never replay
+    tools through another provider after a possibly committed side effect.
     """
     provider, provider_name = get_ai_provider()
 
@@ -314,14 +311,12 @@ def _run_investigation_stream(domain: str, building_id: str, db, system_prompt: 
                 final_tool_calls, final_text = event["tool_calls"], event["final_text"]
             yield event
     except Exception as e:
-        logger.warning(f"{provider_name} run_agentic_task_stream() call failed at runtime ({e}); falling back to MockProvider.")
-        yield {"type": "meta", "provider": f"{provider_name} (unavailable)", "provider_error": str(e)}
-        final_tool_calls, final_text = [], ""
-        for event in MockProvider().run_agentic_task_stream(system_prompt, full_task_prompt, tools, building_id):
-            if event["type"] == "done":
-                final_tool_calls, final_text = event["tool_calls"], event["final_text"]
-            yield event
-        provider_name = f"{provider_name} (unavailable)"
+        logger.warning("%s stream failed (%s, status=%s); not replaying actions", provider_name, type(e).__name__, getattr(e, 'status_code', None))
+        message = "The AI provider interrupted this investigation. Review existing actions before retrying."
+        if getattr(e, 'status_code', None) == 429:
+            message = "Groq's usage limit was reached. Wait a minute before trying again. Completed actions remain saved."
+        yield {"type": "error", "message": message}
+        return
 
     if db is not None:
         findings = agent_memory_service.extract_key_findings(final_tool_calls, final_text)
