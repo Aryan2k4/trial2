@@ -24,4 +24,4 @@ Free hosting only; preserve core workflows; disclose optional inference and pers
 
 - Verified: backend 121 passed / 3 skipped, frontend 72 passed, production build succeeded. See docs/VERIFICATION.md.
 - Review fixes: authenticated dataset/investigation actions; scoped security drift; cancel/reset streams on building switches; sanitize blank cost fields.
-- Deployment pending: Render and Neon plugins still report installed=false. Prepared Docker, Blueprint, runbook and interview guide; no new public link claimed.
+- Cloud deployment verified at https://facilityops.onrender.com on commit b752067: dashboard APIs, signup/login and real Groq investigation work. Neon PostgreSQL is now connected; public signup persistence was verified by direct SQL, and all dashboard endpoints passed after the switch. See docs/VERIFICATION.md for the current limitations.

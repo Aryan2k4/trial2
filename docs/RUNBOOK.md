@@ -23,6 +23,12 @@ Open http://127.0.0.1:8000 and create an account. React and `/api` share this ad
 
 For hot-reload frontend development, run `npm run dev` in `frontend` and the API separately; Vite proxies `/api` to port 8000.
 
+## Current deployment
+
+Public URL: https://facilityops.onrender.com. Render service `srv-db6b878473hc73drslcg` deploys branch `codex/facilityops-reliability`. Neon project `odd-water-91115569`, branch `render-deployment`, holds persistent data in database `facilityops`, schema `facilityops_app`. The app role's default search path is `facilityops_app, public`; this lets startup create tables without granting access to the shared public schema. Store connection credentials only in Render's `DATABASE_URL` secret. The cloud uses `AI_PROVIDER=groq`; optional TensorFlow is disabled.
+
+Dashboard environment settings are the current deployment source of truth. Do not blindly sync the older Blueprint: its provider/default database wiring may differ from the verified service settings.
+
 ## Free deployment: Render + Neon
 
 The major hosting plugin is **Render**. **Neon** supplies persistent PostgreSQL. Connect both accounts to deploy through the plugins. GitHub holds the source. Figma and Sites are not required for this Python application.

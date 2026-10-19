@@ -1,8 +1,8 @@
 # Agentic AI for Smart Facility Operations & Optimization
 
-The reliability rebuild serves React and FastAPI from one URL. The new deployment URL will be recorded after hosting verification; the previous demo link is not a verified deployment of this branch.
+The reliability rebuild serves React and FastAPI at [FacilityOps](https://facilityops.onrender.com). Cloud dashboards, signup and a real Groq investigation were verified on October 19, 2026. Persistent storage is now provided by Neon PostgreSQL; public signup was verified directly in the hosted database. See [verification details](docs/VERIFICATION.md).
 
-Start with [the runbook](docs/RUNBOOK.md), [interview guide](docs/INTERVIEW_GUIDE.md), and [source map](docs/SOURCE_MAP.md). Free hosting uses Render plus external Neon PostgreSQL. The default `mock` provider is scripted, and live TensorFlow models are optional; these limitations are visible in the UI.
+Start with [the runbook](docs/RUNBOOK.md), [interview guide](docs/INTERVIEW_GUIDE.md), and [source map](docs/SOURCE_MAP.md). The free hosting setup uses Render plus external Neon PostgreSQL. The cloud app uses Groq. The local default `mock` provider is scripted, and live TensorFlow models are optional; these limitations are visible in the UI.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/backend-FastAPI-009688)
