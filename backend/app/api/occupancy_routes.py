@@ -50,6 +50,7 @@ def building(building_id: str = Query(DEFAULT_BUILDING), db: Session = Depends(g
         "best_available_zone": best_available_zone(analysis["zones"]),
         "model_confidence": get_model_confidence(),
         "cnn_model_confidence": get_cnn_model_confidence(),
+        "forecast_confidence": occupancy_forecast_service.get_confidence(),
     }
 
 

@@ -1,4 +1,5 @@
 import ConnectionError from '../../components/ui/ConnectionError'
+import ModelReliabilityChart from '../../components/charts/ModelReliabilityChart'
 import { useEffect, useState, useCallback } from 'react'
 import { UsersRound, Database, UploadCloud } from 'lucide-react'
 import { occupancyService } from '../../services/occupancyService'
@@ -135,6 +136,17 @@ export default function OccupancyDashboardPage() {
         <section className="flex flex-col gap-4">
           <SectionHeader title="Model Comparison" subtitle="A second, genuinely-trained model evaluated honestly against the primary classifier" />
           <CnnModelPanel cnn={data.cnn_model_confidence} baseline={data.model_confidence} />
+          {data.forecast_confidence?.prediction_scatter && (
+            <>
+              <ModelReliabilityChart
+                title="One-hour Utilization Forecast"
+                subtitle={`Later-time test data · MAE ${data.forecast_confidence.mae_pct} percentage points`}
+                data={data.forecast_confidence.prediction_scatter}
+                unit="% utilization"
+              />
+              <p className="text-xs text-slate-500">{data.forecast_confidence.note}</p>
+            </>
+          )}
         </section>
 
         <AgentInvestigationPanel investigation={investigation} isLoading={investigating} onRun={runInvestigation} buildingId={data.building_id} title="Ask the Occupancy Agent" prompt="It maps utilization across the building, investigates the spaces that matter, and hands off restricted-zone risk to Security when needed." traceTitle="Occupancy Agent Trace" hint="Watch the agent decide whether a zone requires a Security handoff." buttonLabel="INVESTIGATE OCCUPANCY" accent="violet" />

@@ -84,7 +84,14 @@ RUL_CLIP = 125
 
 
 def load_train() -> pd.DataFrame:
-    df = pd.read_csv(TRAIN_CSV)
+    if TRAIN_CSV.exists():
+        df = pd.read_csv(TRAIN_CSV)
+    else:
+        df = pd.read_csv(RAW_DIR / "train_FD001.txt", sep=r"\s+", header=None, names=COLS_RAW)
+        df = df.rename(columns={**RAW_RENAME, "unit_nr": "asset_id"})
+        df["true_rul_cycles"] = (
+            df.groupby("asset_id")["cycle"].transform("max") - df["cycle"]
+        ).clip(upper=RUL_CLIP)
     return add_engineered_features(df, "asset_id")
 
 

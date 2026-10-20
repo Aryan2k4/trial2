@@ -52,16 +52,13 @@ export default function SecurityModelComparison({ primary, comparison, supervise
   return (
     <Card title="Anomaly Detector Comparison" badge="THREE MODELS, ONE HONEST SCORE">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-        <ModelCard title="Isolation Forest" Icon={TreePine} data={primary} isPrimary badgeLabel="LIVE SCORER" badgeClass="bg-rose-500/10 text-rose-500 border-rose-500/30" />
+        <ModelCard title={primary?.model_used?.startsWith('supervised_synthetic_') ? 'Supervised pattern detector' : 'Isolation Forest'} Icon={TreePine} data={primary} isPrimary badgeLabel="LIVE SCORER" badgeClass="bg-rose-500/10 text-rose-500 border-rose-500/30" />
         <ModelCard title="Local Outlier Factor" Icon={Waves} data={comparison} isPrimary={false} badgeLabel="COMPARISON" badgeClass="bg-slate-500/10 text-slate-400 border-slate-500/30" />
         <ModelCard title="RandomForest (supervised)" Icon={GitBranch} data={supervisedReference} isPrimary={false} badgeLabel="REFERENCE ONLY" badgeClass="bg-violet-500/10 text-violet-500 border-violet-500/30" />
       </div>
       <p className="font-body text-[11px] text-slate-500 mt-3 leading-relaxed">
-        Isolation Forest and LOF are both unsupervised — neither ever sees which events are actually anomalous during training;
-        precision/recall are computed afterward against injected ground truth, purely to check the method honestly.
-        The RandomForest is a different kind of comparison: it's trained WITH the labels (5-fold cross-validated) as an honest
-        reference point for how much accuracy the unsupervised constraint costs — not a candidate for live scoring, since a
-        real deployment has no labeled incident history to supervise on. Isolation Forest stays the real-time scorer.
+        {primary?.note}
+        {' '}Comparison cards contain historical evaluations with different splits and are not a controlled ranking.
       </p>
     </Card>
   )

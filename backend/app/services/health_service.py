@@ -234,7 +234,11 @@ def _build_features(asset_df: pd.DataFrame, feature_cols: list[str]) -> pd.DataF
     can never silently drift apart), then returns just the latest row."""
     df = asset_df.copy()
     df["asset_id"] = "current"  # single-asset frame; group key is a no-op here
-    df = add_engineered_features(df, "asset_id")
+    if any(c.endswith("_mean20") for c in feature_cols):
+        from app.utils.rul_smoothing import features as smoothed_features
+        df = smoothed_features(df, "asset_id")
+    else:
+        df = add_engineered_features(df, "asset_id")
     latest = df.sort_values("cycle").iloc[[-1]]
     return latest[feature_cols]
 

@@ -48,6 +48,7 @@ function ForecastModelBar({ name, metrics, best }) {
         <span className={pct >= 0 ? 'text-teal-500' : 'text-rose-500'}>{pct >= 0 ? '+' : ''}{pct}% vs naive</span>
       </div>
       <p className="font-mono text-[10px] text-slate-400 mt-1">MAE {formatINR(metrics.held_out_test_mae_inr)}</p>
+      <p className="font-mono text-[10px] text-slate-400 mt-1">R² {metrics.held_out_test_r2 ?? 'not available'} · not a classification accuracy</p>
     </div>
   )
 }
@@ -78,8 +79,9 @@ export default function CostModelComparison({ anomalyPrimary, anomalyComparison,
         The real BBMP tenders and derived cross-agent records have no labeled ground truth, so the anomaly detectors are compared
         by flag rate and cross-model agreement, not precision/recall. The forecast models are compared honestly
         against a naive "trend continues" baseline on a held-out tail of real weeks — see each dashboard's
-        forecast card for the caveat about only 27 weeks of history.
+        forecast card for the history limitation. Model agreement is not accuracy.
       </p>
+      {forecastConfidence?.available && <p className="text-xs text-slate-500 mt-2">Evaluation: {forecastConfidence.n_weeks_test} test weeks. {forecastConfidence.note}</p>}
     </Card>
   )
 }

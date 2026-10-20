@@ -148,11 +148,12 @@ def forecast_trend(records_df: pd.DataFrame) -> dict:
     lag1 = weekly["log_spend"].iloc[-1]
     lag2 = weekly["log_spend"].iloc[-2]
     roll3_median = weekly["log_spend"].iloc[-3:].median()
-    week_of_year = int(pd.Timestamp(latest["week"]).isocalendar()[1])
+    # Training uses the first TARGET week's calendar, not the last observed week.
+    week_of_year = int((pd.Timestamp(latest["week"]) + pd.Timedelta(weeks=1)).isocalendar()[1])
 
     X = pd.DataFrame([{"lag1": lag1, "lag2": lag2, "roll3_median": roll3_median, "week_of_year": week_of_year}])[features]
     pred_log = model.predict(X)[0]
-    pred_inr = float(np.expm1(pred_log))
+    pred_inr = float(max(0, np.expm1(pred_log)))
     current_trend = float(weekly["total_spend_inr"].iloc[-3:].mean())
 
     # Real weekly spend history (not just the single forward prediction) —

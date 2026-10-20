@@ -127,23 +127,17 @@ def test_health_model_metrics_honest():
     assert metrics["n_test_engines_held_out"] == 100
 
 
-def test_lstm_deep_learning_model_is_live_and_wins_honestly():
-    """The LSTM was compared honestly against the tree ensemble and
-    genuinely won on the SAME NASA held-out test engines — this asserts
-    that comparison is still recorded truthfully (not that LSTM always
-    "wins" by definition; if a future retrain found the tree model better,
-    this test's job is to catch model_metrics.json silently claiming LSTM
-    is live when it isn't actually better)."""
-    import json
+def test_selected_model_matches_artifact_and_validation():
+    import json, joblib
     from pathlib import Path
-    metrics_path = Path(__file__).resolve().parent.parent / "ml_models" / "maintenance" / "model_metrics.json"
-    metrics = json.loads(metrics_path.read_text())
-
-    assert "lstm_deep_learning" in metrics["all_models"]
-    comparison = metrics["lstm_vs_tree_comparison"]
-    assert comparison["lstm_wins"] is True
-    assert comparison["lstm_mae_cycles"] < comparison["tree_mae_cycles"]
-    assert metrics["live_model"] == "lstm_deep_learning"
+    directory = Path(__file__).resolve().parent.parent / "ml_models" / "maintenance"
+    metrics = json.loads((directory / "model_metrics.json").read_text())
+    bundle = joblib.load(directory / "health_rul_model.pkl")
+    selected = metrics["best_model"]
+    assert metrics["live_model"] == bundle["model_name"] == selected
+    scores = metrics["cv_tuning"]["candidate_mae"]
+    assert selected == min(scores, key=scores.get)
+    assert metrics["all_models"][selected]["held_out_test_mae_cycles"] < metrics["previous_model_benchmark"]["metrics"]["held_out_test_mae_cycles"]
 
 
 def test_asset_health_uses_lstm_and_returns_valid_prediction():

@@ -49,6 +49,8 @@ def get_confidence() -> dict:
         "improvement_over_naive_pct": improvement,
         "confidence": confidence,
         "horizon_minutes": metrics.get("horizon_minutes", 60),
+        "note": metrics.get("note"),
+        "prediction_scatter": metrics.get("prediction_scatter"),
     }
 
 
@@ -105,7 +107,11 @@ def forecast_zone_utilization(readings_df: pd.DataFrame, zone_type: str, capacit
         "is_workspace": int(zone_type == "workspace"), "is_meeting_room": int(zone_type == "meeting_room"),
         "is_common_area": int(zone_type == "common_area"), "is_restricted": int(zone_type == "restricted"),
     }
-    X = pd.DataFrame([row])[features].fillna(0)
+    if bundle.get("feature_pipeline") == "timestamp_v2":
+        from app.utils.utilization_features import build_features
+        X = build_features(work, zone_type, capacity or 0).iloc[[-1]][features]
+    else:
+        X = pd.DataFrame([row])[features].fillna(0)
     predicted = float(np.clip(model.predict(X)[0], 0, 100))
     forecast_time = latest["timestamp"] + pd.Timedelta(minutes=bundle["horizon_steps"] * 15)
 
