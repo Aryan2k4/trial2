@@ -6,8 +6,6 @@ const RANGE_OPTIONS = [
   { label: '3 Days', limit: 288 },
   { label: '7 Days', limit: 672 },
   { label: '30 Days', limit: 2880 },
-  { label: '90 Days', limit: 8640 },
-  { label: 'All (365d)', limit: 35040 },
 ]
 
 /**
